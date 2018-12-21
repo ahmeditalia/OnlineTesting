@@ -3,18 +3,18 @@
    "host": "localhost",
    "port": 3306,
    "username": "root",
-   "password": "123456789",
-   "database": "store",
+   "password": "italia01144152537",
+   "database": "test",
    "synchronize": true,
    "logging": false,
    "entities": [
-      "src/entity/**/*.ts"
+      "src/entity/*.js"
    ],
    "migrations": [
-      "src/migration/**/*.ts"
+      "src/migration/*.js"
    ],
    "subscribers": [
-      "src/subscriber/**/*.ts"
+      "src/subscriber/*.js"
    ],
    "cli": {
       "entitiesDir": "src/entity",
