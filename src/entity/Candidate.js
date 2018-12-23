@@ -1,4 +1,14 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -10,33 +20,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
-var User = /** @class */ (function () {
-    function User() {
+var User_1 = require("./User");
+var Candidate = /** @class */ (function (_super) {
+    __extends(Candidate, _super);
+    function Candidate() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     __decorate([
-        typeorm_1.PrimaryGeneratedColumn(),
-        __metadata("design:type", Number)
-    ], User.prototype, "id", void 0);
-    __decorate([
-        typeorm_1.Column({ length: 50 }),
+        typeorm_1.Column('text'),
         __metadata("design:type", String)
-    ], User.prototype, "username", void 0);
-    __decorate([
-        typeorm_1.Column({ length: 32 }),
-        __metadata("design:type", String)
-    ], User.prototype, "password", void 0);
-    __decorate([
-        typeorm_1.Column(),
-        __metadata("design:type", String)
-    ], User.prototype, "email", void 0);
-    __decorate([
-        typeorm_1.Column(),
-        __metadata("design:type", String)
-    ], User.prototype, "contactNumber", void 0);
-    User = __decorate([
+    ], Candidate.prototype, "cv", void 0);
+    Candidate = __decorate([
         typeorm_1.Entity()
-    ], User);
-    return User;
-}());
-exports.User = User;
-//# sourceMappingURL=User.js.map
+    ], Candidate);
+    return Candidate;
+}(User_1.User));
+exports.Candidate = Candidate;
+//# sourceMappingURL=Candidate.js.map
