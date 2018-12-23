@@ -1,4 +1,4 @@
-const candidate = require("../entity/Candidate").Candidate;
+const Candidate = require("../entity/Candidate").Candidate;
 
 const metadata = require("reflect-metadata");
 const typeorm = require("typeorm");
@@ -20,7 +20,7 @@ Emitter.on("add",(userJSON) =>{
         console.log("Saved a new user with id: " + user.id);
 
         console.log("Loading users from the database...");
-        const users = await connection.manager.find(candidate);
+        const users = await connection.manager.find(Candidate);
         console.log("Loaded users: ", users);
     }).catch(error => console.log(error));
 });
