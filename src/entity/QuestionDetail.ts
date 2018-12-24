@@ -1,18 +1,31 @@
-import {Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn, OneToMany, ManyToMany} from "typeorm";
+import {
+    Entity,
+    ManyToMany,
+    JoinTable,
+    ManyToOne
+} from "typeorm";
 import {Answer} from "./Answer";
-import {QuestionAnswers} from "./QuestionAnswers";
+import {Question} from "./Question";
+import {UserExams} from "./UserExams";
 
 @Entity()
 export class QuestionDetail {
 
-    @PrimaryGeneratedColumn()
-    id: number;
+    @ManyToOne(type => UserExams, ux => ux.questions, {
+        primary: true
+    })
+    userExam: UserExams;
 
-    @OneToOne(type => Answer)
-    @JoinColumn()
+    @ManyToOne(type => Question, {
+        primary: true
+    })
+    question: Question;
+
+    @ManyToOne(type => Answer)
     chosenAnswer: Answer;
 
-    @OneToOne(type => QuestionAnswers)
-    Answers: QuestionAnswers;
+    @ManyToMany(type => Answer, answer=> answer.questionDetails)
+    @JoinTable()
+    answers: Answer[];
 
 }

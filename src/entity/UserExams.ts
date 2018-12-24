@@ -1,20 +1,31 @@
-import {Entity, Column, PrimaryColumn} from "typeorm";
+import {Entity, Column, PrimaryColumn, ManyToOne, OneToOne, OneToMany, JoinColumn} from "typeorm";
+import {Exam} from "./Exam";
+import {Candidate} from "./Candidate";
+import {QuestionDetail} from "./QuestionDetail";
 
 @Entity()
 export class UserExams {
 
-    @PrimaryColumn()
-    userID: number;
+    @ManyToOne(type => Exam, {
+        primary: true
+    })
+    exam: Exam;
 
-    @PrimaryColumn()
-    ExamID: number;
+    @ManyToOne(type => Candidate, candidate => candidate.userExams, {
+        primary: true
+    })
+    candidate: Candidate;
 
-    @Column()
-    precedence: number;
+    @OneToOne(type => UserExams)
+    @JoinColumn()
+    precedence: UserExams;
 
     @Column()
     passed: boolean;
 
     @Column('float')
     score: number;
+
+    @OneToMany(type => QuestionDetail, questionDetail => questionDetail.userExam)
+    questions: QuestionDetail[];
 }

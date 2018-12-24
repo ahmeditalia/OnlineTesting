@@ -10,20 +10,30 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
+var Exam_1 = require("./Exam");
+var Candidate_1 = require("./Candidate");
+var QuestionDetail_1 = require("./QuestionDetail");
 var UserExams = /** @class */ (function () {
     function UserExams() {
     }
+    UserExams_1 = UserExams;
+    var UserExams_1;
     __decorate([
-        typeorm_1.PrimaryColumn(),
-        __metadata("design:type", Number)
-    ], UserExams.prototype, "userID", void 0);
+        typeorm_1.ManyToOne(function (type) { return Exam_1.Exam; }, {
+            primary: true
+        }),
+        __metadata("design:type", Exam_1.Exam)
+    ], UserExams.prototype, "exam", void 0);
     __decorate([
-        typeorm_1.PrimaryColumn(),
-        __metadata("design:type", Number)
-    ], UserExams.prototype, "ExamID", void 0);
+        typeorm_1.ManyToOne(function (type) { return Candidate_1.Candidate; }, function (candidate) { return candidate.userExams; }, {
+            primary: true
+        }),
+        __metadata("design:type", Candidate_1.Candidate)
+    ], UserExams.prototype, "candidate", void 0);
     __decorate([
-        typeorm_1.Column(),
-        __metadata("design:type", Number)
+        typeorm_1.OneToOne(function (type) { return UserExams_1; }),
+        typeorm_1.JoinColumn(),
+        __metadata("design:type", UserExams)
     ], UserExams.prototype, "precedence", void 0);
     __decorate([
         typeorm_1.Column(),
@@ -33,7 +43,11 @@ var UserExams = /** @class */ (function () {
         typeorm_1.Column('float'),
         __metadata("design:type", Number)
     ], UserExams.prototype, "score", void 0);
-    UserExams = __decorate([
+    __decorate([
+        typeorm_1.OneToMany(function (type) { return QuestionDetail_1.QuestionDetail; }, function (questionDetail) { return questionDetail.userExam; }),
+        __metadata("design:type", Array)
+    ], UserExams.prototype, "questions", void 0);
+    UserExams = UserExams_1 = __decorate([
         typeorm_1.Entity()
     ], UserExams);
     return UserExams;

@@ -10,6 +10,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
+var QuestionDetail_1 = require("./QuestionDetail");
+var Question_1 = require("./Question");
 var Answer = /** @class */ (function () {
     function Answer() {
     }
@@ -18,13 +20,21 @@ var Answer = /** @class */ (function () {
         __metadata("design:type", Number)
     ], Answer.prototype, "id", void 0);
     __decorate([
-        typeorm_1.Column(),
+        typeorm_1.Column('text'),
         __metadata("design:type", String)
     ], Answer.prototype, "answer", void 0);
     __decorate([
         typeorm_1.Column(),
         __metadata("design:type", Boolean)
     ], Answer.prototype, "correctness", void 0);
+    __decorate([
+        typeorm_1.ManyToMany(function (type) { return QuestionDetail_1.QuestionDetail; }, function (questionDetail) { return questionDetail.answers; }),
+        __metadata("design:type", Array)
+    ], Answer.prototype, "questionDetails", void 0);
+    __decorate([
+        typeorm_1.ManyToOne(function (type) { return Question_1.Question; }, function (question) { return question.answers; }),
+        __metadata("design:type", Question_1.Question)
+    ], Answer.prototype, "question", void 0);
     Answer = __decorate([
         typeorm_1.Entity()
     ], Answer);

@@ -1,8 +1,11 @@
 "use strict";
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -21,6 +24,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var User_1 = require("./User");
+var UserExams_1 = require("./UserExams");
 var Candidate = /** @class */ (function (_super) {
     __extends(Candidate, _super);
     function Candidate() {
@@ -30,8 +34,12 @@ var Candidate = /** @class */ (function (_super) {
         typeorm_1.Column('text'),
         __metadata("design:type", String)
     ], Candidate.prototype, "cv", void 0);
+    __decorate([
+        typeorm_1.OneToMany(function (type) { return UserExams_1.UserExams; }, function (userExam) { return userExam.candidate; }),
+        __metadata("design:type", Array)
+    ], Candidate.prototype, "userExams", void 0);
     Candidate = __decorate([
-        typeorm_1.Entity("student" && "teacher")
+        typeorm_1.Entity()
     ], Candidate);
     return Candidate;
 }(User_1.User));

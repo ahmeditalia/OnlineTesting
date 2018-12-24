@@ -11,23 +11,32 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var Answer_1 = require("./Answer");
-var QuestionAnswers_1 = require("./QuestionAnswers");
+var Question_1 = require("./Question");
+var UserExams_1 = require("./UserExams");
 var QuestionDetail = /** @class */ (function () {
     function QuestionDetail() {
     }
     __decorate([
-        typeorm_1.PrimaryGeneratedColumn(),
-        __metadata("design:type", Number)
-    ], QuestionDetail.prototype, "id", void 0);
+        typeorm_1.ManyToOne(function (type) { return UserExams_1.UserExams; }, function (ux) { return ux.questions; }, {
+            primary: true
+        }),
+        __metadata("design:type", UserExams_1.UserExams)
+    ], QuestionDetail.prototype, "userExam", void 0);
     __decorate([
-        typeorm_1.OneToOne(function (type) { return Answer_1.Answer; }),
-        typeorm_1.JoinColumn(),
+        typeorm_1.ManyToOne(function (type) { return Question_1.Question; }, {
+            primary: true
+        }),
+        __metadata("design:type", Question_1.Question)
+    ], QuestionDetail.prototype, "question", void 0);
+    __decorate([
+        typeorm_1.ManyToOne(function (type) { return Answer_1.Answer; }),
         __metadata("design:type", Answer_1.Answer)
     ], QuestionDetail.prototype, "chosenAnswer", void 0);
     __decorate([
-        typeorm_1.OneToOne(function (type) { return QuestionAnswers_1.QuestionAnswers; }),
-        __metadata("design:type", QuestionAnswers_1.QuestionAnswers)
-    ], QuestionDetail.prototype, "Answers", void 0);
+        typeorm_1.ManyToMany(function (type) { return Answer_1.Answer; }, function (answer) { return answer.questionDetails; }),
+        typeorm_1.JoinTable(),
+        __metadata("design:type", Array)
+    ], QuestionDetail.prototype, "answers", void 0);
     QuestionDetail = __decorate([
         typeorm_1.Entity()
     ], QuestionDetail);

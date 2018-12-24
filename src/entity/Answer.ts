@@ -1,4 +1,6 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany} from "typeorm";
+import {QuestionDetail} from "./QuestionDetail";
+import {Question} from "./Question";
 
 @Entity()
 export class Answer {
@@ -6,9 +8,15 @@ export class Answer {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column('text')
     answer: string;
 
     @Column()
     correctness: boolean;
+
+    @ManyToMany(type => QuestionDetail, questionDetail => questionDetail.answers)
+    questionDetails: QuestionDetail[];
+
+    @ManyToOne(type => Question, question => question.answers)
+    question: Question;
 }
