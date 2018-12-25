@@ -17,7 +17,6 @@ var UserExams = /** @class */ (function () {
     function UserExams() {
     }
     UserExams_1 = UserExams;
-    var UserExams_1;
     __decorate([
         typeorm_1.ManyToOne(function (type) { return Exam_1.Exam; }, {
             primary: true
@@ -36,11 +35,11 @@ var UserExams = /** @class */ (function () {
         __metadata("design:type", UserExams)
     ], UserExams.prototype, "precedence", void 0);
     __decorate([
-        typeorm_1.Column(),
+        typeorm_1.Column({ default: false }),
         __metadata("design:type", Boolean)
     ], UserExams.prototype, "passed", void 0);
     __decorate([
-        typeorm_1.Column('float'),
+        typeorm_1.Column({ default: 0, type: 'float' }),
         __metadata("design:type", Number)
     ], UserExams.prototype, "score", void 0);
     __decorate([
@@ -51,6 +50,7 @@ var UserExams = /** @class */ (function () {
         typeorm_1.Entity()
     ], UserExams);
     return UserExams;
+    var UserExams_1;
 }());
 exports.UserExams = UserExams;
 //# sourceMappingURL=UserExams.js.map

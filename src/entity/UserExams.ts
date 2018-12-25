@@ -20,10 +20,10 @@ export class UserExams {
     @JoinColumn()
     precedence: UserExams;
 
-    @Column()
+    @Column({ default: false})
     passed: boolean;
 
-    @Column('float')
+    @Column({ default: 0, type: 'float' })
     score: number;
 
     @OneToMany(type => QuestionDetail, questionDetail => questionDetail.userExam)
