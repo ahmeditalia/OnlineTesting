@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <script src="javascripts/jquery.js"></script>
+    <script src="javascripts/register.js"></script>
+    <script src="javascripts/validation.js"></script>
+</head>
+<body>
+
+<div>
+    <h2>Register</h2>
+    <form name="registerForm">
+        <input type="text" placeholder="First name" id="firstname" name="firstname"><br>
+        <div id="fname"></div>
+        <input type="text" placeholder="Last name" id="lastname" name="lastname"><br>
+        <div id="sname"></div>
+        <input type="text" placeholder="Username" id="username" name="username"><br>
+        <div id="uname"></div>
+        <input type="text" placeholder="E-mail" id="email" name="email"><br>
+        <div id="em"></div>
+        <input type="password" placeholder="password" id="password" name="password"><br>
+        <div id="pass"></div>
+        <button id="register" onclick=" return registervalid()">Register</button>
+    </form>
+</div>
+
+</body>
+</html>
