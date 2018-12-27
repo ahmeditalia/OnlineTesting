@@ -1,19 +1,26 @@
 $(document).ready(function () {
-    $("#register").click(()=>{
-        var user={
-            firstname: $('#firstname').val(),
-            lastname: $("#lastname").val(),
+    $("div#cancv").hide();
+    $("#candidate").click(function () {
+        $("div#cancv").show();
+    });
+    $("#HR").click(function () {
+        $("div#cancv").hide();
+    });
+    $("#register").click(() => {
+        var user = {
             username: $("#username").val(),
+            password: $("#password").val(),
             email: $("#email").val(),
-            password: $("#password").val()
+            contactNumber: $("#contact").val(),
+            cv : $("#CV").val()
         };
         $.ajax({
-            url: "register",
+            url: "request_register",
             type: "POST",
             dataType: 'json',
-            contentType : 'application/json; charset=utf-8',
+            contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(user),
-            success: (data) =>{
+            success: (data) => {
                 console.log(data);
             }
         });

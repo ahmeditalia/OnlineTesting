@@ -1,34 +1,52 @@
-const metadata = require("reflect-metadata");
+const eventEmitter = require("events");
 const typeorm = require("typeorm");
 const User = require("../entity/User").User;
-const eventEmitter = require("events");
+const HR = require("../entity/HR").HR;
+const Candidate = require("../entity/Candidate").Candidate;
+let em = new eventEmitter();
+// existsOrCreateHR = function(userJSON) {
 
-var Emitter = new eventEmitter();
-
-Emitter.on("checkuser",(userJSON) =>{
-    typeorm.createConnection().then(async connection => {
-        console.log("Check exits or creat...");
-        const user = new User();
-        user.firstName = userJSON.firstname;
-        user.lastName = userJSON.lastname;
+em.on("existsOrCreateHR",(userJSON)=>{
+    typeorm.createConnection().then( async connection => {
+        console.log("Check exits or creat...", userJSON);
+        const user = new HR();
         user.username = userJSON.username;
         user.email = userJSON.email;
         user.password = userJSON.password;
-        const exemail = await connection.manager.findOne(User,{email:user.email});
-        const exusername = await connection.manager.findOne(User,{username:user.username});
-        var result;
-        if(exemail==null && exusername==null){
-            await connection.manager.save(user);
-            result="suc";
+        user.contactNumber = userJSON.contactNumber;
+        const exsitsEmail = await connection.manager.findOne(HR, {email: user.email});
+        const exsitsUsername = await connection.manager.findOne(HR, {username: user.username});
+        if (exsitsEmail == null && exsitsUsername == null) {
+            connection.manager.save(user);
+            // return true;
         }
-        else{
-            result="fai";
-        }
-        connection.close();
+        // return false;
     });
 });
 
 
+existsOrCreateCandidate = function(userJSON) {
+    return typeorm.createConnection().then(async connection => {
+        console.log("Check exits or creat...", userJSON);
+        const user = new Candidate();
+        user.username = userJSON.username;
+        user.email = userJSON.email;
+        user.password = userJSON.password;
+        user.contactNumber = userJSON.contactNumber;
+        user.cv = userJSON.cv;
+        const exsitsEmail = await connection.manager.findOne(Candidate, {email: user.email});
+        const exsitsUsername = await connection.manager.findOne(Candidate, {username: user.username});
+        if (exsitsEmail == null && exsitsUsername == null) {
+            connection.manager.save(user);
+            return true;
+        }
+        return false;
+    }).catch(error =>console.log(error));
+};
+
+
 module.exports ={
-    Emitter
+    // existsOrCreateHR,
+    existsOrCreateCandidate,
+    em
 };
