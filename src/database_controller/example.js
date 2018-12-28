@@ -10,7 +10,6 @@ const User = require("../entity/User").User;
 const metadata = require("reflect-metadata");
 const typeorm = require("typeorm");
 const eventEmitter = require("events");
-
 var Emitter = new eventEmitter();
 
 Emitter.on("add",(userJSON) =>{
