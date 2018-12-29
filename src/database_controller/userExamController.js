@@ -1,12 +1,4 @@
-
-const Exam = require("../entity/Exam").Exam;
-const Question = require("../entity/Question").Question;
 const UserExams = require("../entity/UserExams").UserExams;
-const QuestionDetail = require("../entity/QuestionDetail").QuestionDetail;
-const Answer = require("../entity/Answer").Answer;
-const Candidate = require("../entity/Candidate").Candidate;
-const User = require("../entity/User").User;
-
 const metadata = require("reflect-metadata");
 const typeorm = require("typeorm");
 const eventEmitter = require("events");
