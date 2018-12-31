@@ -46,19 +46,20 @@ $(document).ready(()=>{
                         //radio answers
                         $(`input[type=radio][name=${questionDetails.question.id}]`).change(() => {
                             let ansId = $(`input[name=${questionDetails.question.id}]:checked`).val();
-                            let answer = questionDetails.answers.find((element) => {
-                                return element.id == ansId;
-                            });
-                            questionDetails.chosenAnswer = answer;
+                            // let answer = questionDetails.answers.find((element) => {
+                            //     return element.id == ansId;
+                            // });
+                            // questionDetails.chosenAnswer = answer;
 
                             $.ajax({
                                 url:'/userExam/selectAnswer',
                                 type: 'POST',
                                 data:{
                                     questionDetail: questionDetails,
+                                    chosenAnswerID:ansId
                                 },
                                 success:(status)=>{
-                                  alert('ans saved');
+                                  console.log(status);
                                 }
                             });
                         });
@@ -88,12 +89,14 @@ $(document).ready(()=>{
 
 
 
-    /*$('#submit').click(()=>{
-        thisUserExam.score = score;
-        if(score >= .5 ){
-            thisUserExam.passed = true;
-        }
-        console.log(thisUserExam);
-        alert(score);
-    });*/
+    $('#submit').click(()=>{
+        $.ajax({
+            url:'userExam/updateResults',
+            type: 'POST',
+            data: {
+                userName: userName,
+                examName: examName
+            }
+        });
+    });
 });

@@ -10,6 +10,7 @@ const eventEmitter = require("events");
 const typeorm = require("typeorm");
 const connection = typeorm.getConnection();
 
+
 let event = new eventEmitter();
 
 event.on('addExam', async (res, examName) => {
@@ -74,7 +75,7 @@ event.on('getUserExam', async (req, res) => {
     let status = false;
     let numOfQuestions = 3;
 
-    if (userExam.precedence.passed == null || userExam.precedence.passed) {
+    if (userExam.precedence == null || userExam.precedence.passed) {
         if (userExam.questions.length != numOfQuestions) {
             let generatedQuestions = getRandomElements(exam.questions, numOfQuestions);
             for (let i = 0; i < numOfQuestions; i++) {
@@ -142,21 +143,34 @@ let getUserExam = async (examName, userName) => {
     return await connection.manager.findOne(UserExams, {exam: exam, candidate: candidate},
         {relations: ["exam", "candidate", "precedence", "precedence.exam", "precedence.candidate",
                 "questions", "questions.question", "questions.chosenAnswer", "questions.answers"]});
-
 };
 
-let updateSolvingUserExam = async (questionDetail)=>{
-    let userExam = await getUserExam('Java','sa2a');
+let updateSolvingUserExam = async (questionDetail, chosenAnsID)=> {
+    let userExam = await getUserExam('Java', 'sa2a');
     //user exam should come from sessions
 
-    let questionD = userExam.questions.find((quesDetail)=> {return quesDetail.question.id == questionDetail.question.id});
-    let index = userExam.questions.indexOf(questionD);
-    if(index !=-1){
-        userExam.questions[index] = questionDetail;
+    await connection.getRepository(QuestionDetail).update({userExam: userExam, question: questionDetail.question},
+        {chosenAnswer: chosenAnsID});
+};
+
+let updateUserExamResults = async (examName, userName) => {
+    let userExam = await getUserExam(examName, userName);//sessions
+    let score = 0 ;
+    let numOfQuestions= userExam.questions.length;
+    userExam.questions.forEach((questionDetail)=>{
+        if (questionDetail.chosenAnswer && questionDetail.chosenAnswer.correctness)
+        {
+            score+= 1/numOfQuestions;
+        }
+    });
+    let passed = false;
+    if(score>= .5){
+        passed = true;
     }
-    await connection.getRepository(UserExams).save(userExam);
+    await connection.getRepository(UserExams).update({id:userExam.id},{passed:passed, score:score});
+
 };
 
 module.exports = {
-    event,getUserExam,updateSolvingUserExam
+    event,getUserExam,updateSolvingUserExam, updateUserExamResults
 };
