@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
+    <script src="javascripts/jquery.js"></script>
+    <script src="javascripts/register.js"></script>
+    <script src="javascripts/validation.js"></script>
+</head>
+<body>
+
+<div id="divForm">
+    <h2>Register</h2>
+    <input type="text" placeholder="Username" id="username" name="username"><br>
+    <div id="uName"></div>
+    <input type="password" placeholder="password" id="password" name="password"><br>
+    <div id="divPass"></div>
+    <input type="text" placeholder="E-mail" id="email" name="email"><br>
+    <div id="divEmail"></div>
+    <input type="text" placeholder="contact number" id="contact" name="contact"><br>
+    <div id="con"></div>
+    <div id="divCv">
+        <input type="text" placeholder="CV" id="CV" name="CV"><br>
+        <div id="divCvError"></div>
+    </div>
+    <div class="onOffSwitch">
+        <input type="checkbox" name="onOffSwitch" class="onOffSwitch-checkbox" id="myOnOffSwitch" checked>
+        <label class="onOffSwitch-label" for="myOnOffSwitch">
+            <span class="onOffSwitch-inner"></span>
+            <span class="onOffSwitch-switch"></span>
+        </label>
+    </div>
+    <button id="register">Register</button>
+</div>
+
+</body>
+</html>
