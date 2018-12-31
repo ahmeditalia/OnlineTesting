@@ -1,80 +1,103 @@
-// function registervalid() {
-//     var firstname = document.forms["registerForm"]["firstname"].value;
-//     var secondname = document.forms["registerForm"]["secondname"].value;
-//     var username = document.forms["registerForm"]["username"].value;
-//     var email = document.forms["registerForm"]["email"].value;
-//     var password = document.forms["registerForm"]["password"].value;
-//     var flag1 = true;
-//     var flag2 = true;
-//     var flag3 = true;
-//     var flag4 = true;
-//     var flag5 = true;
-//     var filtermail = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-//     var filterpass = /^([a-zA-Z0-9]){8,32}$/;
-//
-//     if (firstname == "") {
-//         document.getElementById('fname').innerText = "*firstname require";
-//         flag4 = false;
-//     } else if (firstname.length > 20) {
-//         document.getElementById('fname').innerText = "*firstname too long";
-//         flag4 = false;
-//     } else {
-//         document.getElementById('fname').innerText = "";
-//         flag4 = true;
-//     }
-//
-//     if (secondname == "") {
-//         document.getElementById('sname').innerText = "*secondname require";
-//         flag5 = false;
-//     } else if (secondname.length > 20) {
-//         document.getElementById('sname').innerText = "*secondname too long";
-//         flag5 = false;
-//     } else {
-//         document.getElementById('sname').innerText = "";
-//         flag5 = true;
-//     }
-//
-//     if (username == "") {
-//         document.getElementById('uname').innerText = "*Username require";
-//         flag1 = false;
-//     } else if (username.length > 20) {
-//         document.getElementById('uname').innerText = "*Username too long";
-//         flag1 = false;
-//     } else {
-//         document.getElementById('uname').innerText = "";
-//         flag1 = true;
-//     }
-//     if (email == "") {
-//         document.getElementById('em').innerText = "*Email require";
-//         flag2 = false;
-//     } else if (!filtermail.test(email)) {
-//         document.getElementById('em').innerText = "*Email not valid";
-//         flag2 = false;
-//     } else {
-//         document.getElementById('em').innerText = "";
-//         flag2 = true;
-//     }
-//
-//     if (password == "") {
-//         document.getElementById('pass').innerText = "*Password require";
-//         flag3 = false;
-//     } else if (!filterpass.test(password)) {
-//         document.getElementById('pass').innerText = "*Password should [8-32]";
-//         flag3 = false;
-//     } else if (password.length > 32) {
-//         document.getElementById('pass').innerText = "*Password too long";
-//         flag3 = false;
-//     } else if (password.length < 8) {
-//         document.getElementById('pass').innerText = "*Password too short";
-//         flag3 = false;
-//     } else {
-//         document.getElementById('pass').innerText = "";
-//         flag3 = true;
-//     }
-//
-//     if (flag1 && flag2 && flag3)
-//         return true;
-//     else {
-//         return false;
-//     }
-// }
+function validationLogin() {
+    let filterpass = /^([a-zA-Z0-9]){8,32}$/;
+    let username = document.getElementById("user").value;
+    let password = document.getElementById("pass").value;
+
+    let flag1 = true;
+    let flag2 = true;
+
+    if (username === "") {
+        document.getElementById('usererror').innerText = "*Username require";
+        flag1 = false;
+    } else if (username.length > 20) {
+        document.getElementById('usererror').innerText = "*Username too long";
+        flag1 = false;
+    } else {
+        document.getElementById('usererror').innerText = "";
+        flag1 = true;
+    }
+
+    if (password === "") {
+        document.getElementById('passerror').innerText = "*Password require";
+        flag2 = false;
+    } else if (!filterpass.test(password)) {
+        document.getElementById('passerror').innerText = "*Invalid Password [8-32],digit,chars";
+        flag2 = false;
+    } else {
+        document.getElementById('passerror').innerText = "";
+        flag2 = true;
+    }
+    if (flag1 && flag2)
+        return true;
+    return false;
+}
+
+function validationٌRegister() {
+    let filterpass = /^([a-zA-Z0-9]){8,32}$/;
+    let filtermail = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    let username = document.getElementById("user2").value;
+    let password = document.getElementById("pass2").value;
+    let email = document.getElementById("email").value;
+    let contact = document.getElementById("contact").value;
+    let cv = document.getElementById("cv").value;
+
+    let flag1 = true;
+    let flag2 = true;
+    let flag3 = true;
+    let flag4 = true;
+    let flag5 = true;
+
+    if (username === "") {
+        document.getElementById('usererroru').innerText = "*Username require";
+        flag1 = false;
+    } else if (username.length > 20) {
+        document.getElementById('usererroru').innerText = "*Username too long";
+        flag1 = false;
+    } else {
+        document.getElementById('usererroru').innerText = "";
+        flag1 = true;
+    }
+
+    if (password === "") {
+        document.getElementById('passerroru').innerText = "*Password require";
+        flag2 = false;
+    } else if (!filterpass.test(password)) {
+        document.getElementById('passerroru').innerText = "*Invalid Password [8-32],digit,chars";
+        flag2 = false;
+    } else {
+        document.getElementById('passerroru').innerText = "";
+        flag2 = true;
+    }
+
+    if (email === "") {
+        document.getElementById('emailerroru').innerText = "*Email require";
+        flag3 = false;
+    } else if (!filtermail.test(email)) {
+        document.getElementById('emailerroru').innerText = "*Invalid Email";
+        flag3 = false;
+    } else {
+        document.getElementById('emailerroru').innerText = "";
+        flag3 = true;
+    }
+
+    if (contact === "") {
+        document.getElementById('contacterroru').innerText = "*Contact require";
+        flag4 = false;
+    } else {
+        document.getElementById('contacterroru').innerText = "";
+        flag4 = true;
+    }
+
+    if (cv === "") {
+        document.getElementById('cverroru').innerText = "*CV require";
+        flag5 = false;
+    } else {
+        document.getElementById('cverroru').innerText = "";
+        flag5 = true;
+    }
+
+
+    if (flag1 && flag2 && flag3 && flag4 && flag5)
+        return true;
+    return false;
+}

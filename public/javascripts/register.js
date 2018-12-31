@@ -1,18 +1,22 @@
 $(document).ready(function () {
-    $("div#cancv").hide();
-    $("#candidate").click(function () {
-        $("div#cancv").show();
-    });
-    $("#HR").click(function () {
-        $("div#cancv").hide();
+    $("#divCv").hide();
+    let flag =true;
+    $("#myonoffswitch2").click(()=>{
+        flag = !flag;
+        // if(flag)
+        //     alert("HR");
+        // else
+        //     alert("Candidate");
     });
     $("#register").click(() => {
-        var user = {
-            username: $("#username").val(),
-            password: $("#password").val(),
+        if(!validationٌRegister())
+            return;
+        let user = {
+            username: $("#user2").val(),
+            password: $("#pass2").val(),
             email: $("#email").val(),
             contactNumber: $("#contact").val(),
-            cv : $("#CV").val()
+            cv : $("#cv").val()
         };
         $.ajax({
             url: "request_register",
@@ -21,7 +25,7 @@ $(document).ready(function () {
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(user),
             success: (data) => {
-                console.log(data);
+                alert(data.success);
             }
         });
     });

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
+    <script src="javascripts/jquery.js"></script>
+    <script src="javascripts/login.js"></script>
+    <script src="javascripts/register.js"></script>
+    <script src="javascripts/validation.js"></script>
+</head>
+<body>
+<div class="login-wrap">
+    <div class="login-html">
+        <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Sign In</label>
+        <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label>
+        <div class="login-form">
+            <div class="sign-in-htm">
+                <div class="group">
+                    <label for="user" class="label">Username</label>
+                    <input id="user" type="text" class="input">
+                    <div class="err" id="usererror"></div>
+                </div>
+                <div class="group">
+                    <label for="pass" class="label">Password</label>
+                    <input id="pass" type="password" class="input" data-type="password">
+                    <div class="err" id="passerror"></div>
+                </div>
+                <div class="group" style="width: 115px;height: 30px">
+                    <div class="onoffswitch">
+                        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+                        <label class="onoffswitch-label" for="myonoffswitch">
+                            <span class="onoffswitch-inner"></span>
+                            <span class="onoffswitch-switch"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="group">
+                    <input type="submit" class="button" value="Sign In" id="login">
+                </div>
+                <div class="hr"></div>
+            </div>
+            <div class="sign-up-htm">
+                <div class="group">
+                    <label for="user" class="label">Username</label>
+                    <input id="user2" type="text" class="input">
+                    <div class="err" id="usererroru"></div>
+                </div>
+                <div class="group">
+                    <label for="pass" class="label">Password</label>
+                    <input id="pass2" type="password" class="input" data-type="password">
+                    <div class="err" id="passerroru"></div>
+                </div>
+                <div class="group">
+                    <label for="pass" class="label">Email Address</label>
+                    <input id="email" type="email" class="input">
+                    <div class="err" id="emailerroru"></div>
+                </div>
+                <div class="group">
+                    <label for="pass" class="label">Contact</label>
+                    <input id="contact" type="text" class="input" data-type="contact">
+                    <div class="err" id="contacterroru"></div>
+                </div>
+                <div class="group" id="divCV">
+                    <label for="pass" class="label">Cv</label>
+                    <input id="cv" type="password" class="input" data-type="cv">
+                    <div class="err" id="cverroru"></div>
+                </div>
+                <div class="group" style="width: 115px;height: 30px">
+                    <div class="onoffswitch">
+                        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch2" checked>
+                        <label class="onoffswitch-label" for="myonoffswitch2">
+                            <span class="onoffswitch-inner"></span>
+                            <span class="onoffswitch-switch"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="group">
+                    <input type="submit" class="button" value="Sign Up" id="register">
+                </div>
+                <div class="hr"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<div id="divForm">-->
+    <!--<h2>Register</h2>-->
+    <!--<input type="text" placeholder="Username" id="username" name="username"><br>-->
+    <!--<div id="uName"></div>-->
+    <!--<input type="password" placeholder="password" id="password" name="password"><br>-->
+    <!--<div id="divPass"></div>-->
+    <!--<div class="onOffSwitch">-->
+        <!--<input type="checkbox" name="onOffSwitch" class="onOffSwitch-checkbox" id="myOnOffSwitch" checked>-->
+        <!--<label class="onOffSwitch-label" for="myOnOffSwitch">-->
+            <!--<span class="onOffSwitch-inner"></span>-->
+            <!--<span class="onOffSwitch-switch"></span>-->
+        <!--</label>-->
+    <!--</div>-->
+    <!--<button id="login">login</button>-->
+<!--</div>-->
+</body>
+</html>

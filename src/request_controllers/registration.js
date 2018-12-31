@@ -1,31 +1,22 @@
-const metadata = require("reflect-metadata");
-const typeorm = require("typeorm");
-const User = require("../entity/User").User;
-const eventEmitter = require("events");
-const chuser = require("../database_controller/usercheck");
-const ex = require("../database_controller/example");
-let Emitter = new eventEmitter();
+const app = require("../app").app;
+const CreateOrExists = require("../database_controller/CreateOrExists");
 
-Emitter.on("HR_register",async (user)=>{
-    // let result = await chuser.existsOrCreateHR(user);
-    let result = chuser.em.emit("existsOrCreateHR",user);
+app.post("/request_register", async (req, res) => {
+    console.log("start");
+    let user = req.body;
+    let result;
+    if (user.cv == "") {
+        result = await CreateOrExists.checkExistsOrCreateHR(user);
+    }
+    else {
+        result = await CreateOrExists.checkExistsOrCreateCandidate(user);
+    }
     if(result)
-        console.log("created");
+    {
+        res.send('{"success" : "Create"}');
+    }
     else
-        console.log("exists");
-    // res(result);
+    {
+        res.send('{"success" : "Exists"}');
+    }
 });
-
-Emitter.on("Candidate_register", (user)=>{
-    ex.Emitter.emit("add",user);
-    // let result = await chuser.existsOrCreateCandidate(user);
-    // if(result)
-    //     console.log("created");
-    // else
-    //     console.log("exists");
-    // res(result);
-});
-
-module.exports = {
-  Emitter
-};
