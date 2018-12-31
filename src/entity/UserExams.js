@@ -18,15 +18,15 @@ var UserExams = /** @class */ (function () {
     }
     UserExams_1 = UserExams;
     __decorate([
-        typeorm_1.ManyToOne(function (type) { return Exam_1.Exam; }, {
-            primary: true
-        }),
+        typeorm_1.PrimaryGeneratedColumn(),
+        __metadata("design:type", String)
+    ], UserExams.prototype, "id", void 0);
+    __decorate([
+        typeorm_1.ManyToOne(function (type) { return Exam_1.Exam; }),
         __metadata("design:type", Exam_1.Exam)
     ], UserExams.prototype, "exam", void 0);
     __decorate([
-        typeorm_1.ManyToOne(function (type) { return Candidate_1.Candidate; }, function (candidate) { return candidate.userExams; }, {
-            primary: true
-        }),
+        typeorm_1.ManyToOne(function (type) { return Candidate_1.Candidate; }, function (candidate) { return candidate.userExams; }),
         __metadata("design:type", Candidate_1.Candidate)
     ], UserExams.prototype, "candidate", void 0);
     __decorate([
