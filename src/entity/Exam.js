@@ -15,11 +15,7 @@ var Exam = /** @class */ (function () {
     function Exam() {
     }
     __decorate([
-        typeorm_1.PrimaryGeneratedColumn(),
-        __metadata("design:type", Number)
-    ], Exam.prototype, "id", void 0);
-    __decorate([
-        typeorm_1.Column({ length: 50 }),
+        typeorm_1.PrimaryColumn({ length: 50 }),
         __metadata("design:type", String)
     ], Exam.prototype, "name", void 0);
     __decorate([

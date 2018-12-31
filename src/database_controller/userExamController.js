@@ -1,41 +1,43 @@
 const UserExams = require("../entity/UserExams").UserExams;
 const metadata = require("reflect-metadata");
-const typeorm = require("typeorm");
+const getConnection = require("typeorm").getConnection();
 const eventEmitter = require("events");
 
 var Emitter = new eventEmitter();
 
-Emitter.on("getUserExam",(userID) =>{
-    typeorm.createConnection().then(async connection => {
-        var userExamRepo = connection.getRepository(UserExams);
-        var exams = await userExamRepo.find(
-            {
-                where: {candidate: userID},
-                relation:[exam,candidate,precedence]
-            });
-        connection.close();
-        return exams;
+let findByCandidate = async function (candidate)
+{
+    let positionRepo = await getConnection.getRepository(UserExams);
+    let Exams = await positionRepo.find(
+        {
+            where: {candidate: candidate},
+            relations : ["exam","candidate","precedence","questions"]
+        });
+    return Exams;
+};
 
-    }).catch(error =>
-    {
-        console.log(error);
-        connection.close();
-    });
-});
+let findByCandidateAndExam =async function (candidate,exam)
+{
+    let positionRepo = await getConnection.getRepository(UserExams);
+    let Exams = await positionRepo.findOne(
+        {
+            where: {exam: exam, candidate: candidate},
+            relations : ["exam","candidate","precedence","questions"]
+        });
+    return Exams;
+};
 
 
-Emitter.on("addUserExam",(userExam) =>{
-    typeorm.createConnection().then(async connection => {
-        var userExamRepo = connection.getRepository(UserExams);
-        await userExamRepo.save(userExam);
-        connection.close();
-    }).catch(error =>
-    {
-        console.log(error);
-        connection.close();
-    });
-});
+//Emitter.on("save",(userExam) =>{
+let save = async function (userExam){
+    let positionRepo = await getConnection.getRepository(UserExams);
+    await positionRepo.save(userExam);
+    console.log("1");
+};
+
 
 module.exports ={
-    Emitter
+    save,
+    findByCandidateAndExam,
+    findByCandidate
 };

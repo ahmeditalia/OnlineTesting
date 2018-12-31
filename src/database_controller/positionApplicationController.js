@@ -1,85 +1,75 @@
-const PositionApplication = require("../entity/PositionApplication").PositionApplication;
 const metadata = require("reflect-metadata");
-const typeorm = require("typeorm");
+const getConnection = require("typeorm").getConnection();
 const eventEmitter = require("events");
+const PositionApplication = require("../entity/PositionApplication").PositionApplication;
 
 let Emitter = new eventEmitter();
 
 
 
-let findByPositionID = function (Position)
+let findByPositionID = async function (Position)
 {
-    return typeorm.createConnection().then(async connection => {
-        let positionRepo = connection.getRepository(PositionApplication);
-        let positions = await positionRepo.find(
-            {
-                relations :["candidate"],
-                where: {position: Position}
-            });
-        connection.close();
-        return positions;
-    }).catch(error =>
-    {
-        console.log(error);
-        connection.close();
-    });
+    let positionRepo = await getConnection.getRepository(PositionApplication);
+    let positions = await positionRepo.find(
+        {
+            relations :["candidate"],
+            where: {position: Position}
+        });
+    return positions;
 };
 
-let findByPositionIDAndAccepted = function (Position,acceptance)
+let findByPositionIDAndAccepted = async function (Position,acceptance)
 {
-    return typeorm.createConnection().then(async connection => {
-        let positionRepo = connection.getRepository(PositionApplication);
-        let positions = await positionRepo.find(
-            {
-                relations :["candidate"],
-                where: {position: Position , accepted: acceptance}
-            });
-        connection.close();
-        return positions;
-    }).catch(error =>
-    {
-        console.log(error);
-        connection.close();
-    });
+    let positionRepo = await getConnection.getRepository(PositionApplication);
+    let positions = await positionRepo.find(
+        {
+            relations :["candidate"],
+            where: {position: Position , accepted: acceptance}
+        });
+    return positions;
 };
 
 
-let findByPositionIDAndSeen = function (Position,seen)
+let findByPositionIDAndSeen = async function (Position,seen)
 {
-    return typeorm.createConnection().then(async connection => {
-        let positionRepo = connection.getRepository(PositionApplication);
-        let positions = await positionRepo.find(
-            {
-                relations :["candidate"],
-                where: {position: Position , seen: seen}
-            });
-        connection.close();
-        return positions;
-    }).catch(error =>
-    {
-        console.log(error);
-        connection.close();
-    });
+    let positionRepo = await getConnection.getRepository(PositionApplication);
+    let positions = await positionRepo.find(
+        {
+            relations :["candidate"],
+            where: {position: Position , seen: seen}
+        });
+    return positions;
 };
 
-//Emitter.on("save1",(application) =>{
-let save = function(application){
-    typeorm.createConnection().then(async connection => {
-        let applicationRepo = connection.getRepository(PositionApplication);
-        let temp = await applicationRepo.save(application);
-        connection.close();
-    }).catch(error =>
-    {
-        console.log(error);
-        connection.close();
-    });
+let findByPositionIDAndAcceptedAndSeen = async function (Position,acceptance,seen)
+{
+    let positionRepo = await getConnection.getRepository(PositionApplication);
+    let positions = await positionRepo.find(
+        {
+            relations :["candidate"],
+            where: {position: Position ,accepted: acceptance, seen: seen}
+        });
+    return positions;
 };
 
+Emitter.on("save",async (application) =>{
+        let applicationRepo = await getConnection.getRepository(PositionApplication);
+        await applicationRepo.save(application);
+});
+
+
+//Emitter.on("update",(application) =>{
+let update = async function (application){
+    let applicationRepo = await getConnection.getRepository(PositionApplication);
+    await applicationRepo.update(
+        {position: application.position,candidate: application.candidate},
+        {accepted: application.accepted, seen: application.seen});
+};
 
 module.exports ={
-    Emitter,
+    update,
     findByPositionID,
     findByPositionIDAndAccepted,
     findByPositionIDAndSeen,
-    save
+    findByPositionIDAndAcceptedAndSeen
 };
