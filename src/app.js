@@ -1,35 +1,33 @@
-const UserController = require("./database_controller/example").Emitter;
 const express = require("express");
 const bodyParser = require('body-parser');
 const path = require("path");
+let createConnection = require("typeorm").createConnection();
 
-var location = path.join(__dirname,"../public");
-console.log(location);
-var app = express();
-app.use(express.static(location));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+createConnection.then(()=> {
+    let location = path.join(__dirname,"../public");
+    console.log(location);
+    let app = express();
+    app.use(express.static(location));
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: true }));
 
 
+    app.listen(3000,()=>{
+        console.log("application has started on port 3000");
+    });
 
-app.get("/",(req,res)=>{
-    res.render("/login.html");
+    module.exports ={
+        app
+    };
+
+    // const hr = require("./request_controllers/hrController");
+    const exam= require('./request_controllers/Exam');
+    const userExam= require('./request_controllers/UserExam');
+
+}).catch(error =>
+{
+    console.log(error);
 });
 
 
 
-app.post("/register",(req,res)=>{
-    var user = req.body;
-    UserController.emit("add",user);
-    console.log("we came here");
-});
-
-app.listen(3000,()=>{
-    console.log("application has started on port 3000");
-});
-
-module.exports = {
-    app
-};
-
-const exam= require('./request_controllers/Exam');

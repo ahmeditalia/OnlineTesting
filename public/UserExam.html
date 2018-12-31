@@ -5,13 +5,19 @@
     <script src="javascripts/jquery.js"></script>
     <script src="javascripts/UserExam.js"></script>
 
-    <title>Exam page</title>
+    <title>Exam Results</title>
 </head>
 <body>
-    <form>
+    <form action="ExamResults.html">
+
         <h1 id="examName"></h1>
-        <ol id="listQuestionsAnswers">
+        <div>Number of questions:  Marked: <input type="text" name="numOfMarkedQ" size="1" readonly>
+            |  Solved: <input type="text" name="numOfAnsweredQ" size="1" readonly>
+            |  Total: <input type="text" name="numOfQuestions" size="1" readonly>
+        </div>
+        <ol id="listQuestionsAnswers" >
         </ol>
+        <button type="submit" id="submit" value="Submit">Submit</button>
     </form>
 </body>
 </html>

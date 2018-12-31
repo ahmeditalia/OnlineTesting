@@ -8,114 +8,113 @@ const Question = require('../entity/Question').Question;
 const Exam = require('../entity/Exam').Exam;
 const eventEmitter = require("events");
 const typeorm = require("typeorm");
+const connection = typeorm.getConnection();
 
 let event = new eventEmitter();
 
-event.on('addExam',(res, examName)=>{
-    typeorm.createConnection().then(async connection => {
+event.on('addExam', async (res, examName) => {
 
-        let newExam = new Exam();
-        newExam.name = examName;
-        // newExam.questions = [];
-        await connection.manager.save(newExam);
-        res.send({status: true});
+    let newExam = new Exam();
+    newExam.name = examName;
+    // newExam.questions = [];
+    await connection.manager.save(newExam);
+    res.send({status: true});
 
-        await connection.close();
-    }).catch(error => console.log(error));
 });
 
-event.on('addQuestion',(res, examName,questionName)=>{
-    typeorm.createConnection().then(async connection => {
-        let examRepo = connection.getRepository(Exam);
-        let qRepo = connection.getRepository(Question);
-        let exam =  await examRepo.findOne({name: examName});
-        let question = new Question();
-        question.name = questionName;
-        question.exam =exam;
-        await qRepo.save(question);
-        res.send({status: true});
-        await connection.close();
-
-    }).catch(error => console.log(error));
+event.on('addQuestion', async (res, examName, questionName) => {
+    let examRepo = connection.getRepository(Exam);
+    let qRepo = connection.getRepository(Question);
+    let exam = await examRepo.findOne({name: examName});
+    let question = new Question();
+    question.name = questionName;
+    question.exam = exam;
+    await qRepo.save(question);
+    res.send({status: true});
 });
 
-event.on('addAnswer',(res, answerJSON)=>{
-    typeorm.createConnection().then(async connection => {
-        let qRepo = connection.getRepository(Question);
-        let answer = new Answer();
-        answer.name = answerJSON.name;
-        answer.correctness = (answerJSON.correctness === 'true');
-        answer.question = await qRepo.findOne({name: answerJSON.questionName });
-        await connection.manager.save(answer);
-        res.send({status: true});
-        await connection.close();
-    }).catch(error => console.log(error));
+event.on('addAnswer', async (res, answerJSON) => {
+    let qRepo = connection.getRepository(Question);
+    let answer = new Answer();
+    answer.name = answerJSON.name;
+    answer.correctness = (answerJSON.correctness === 'true');
+    answer.question = await qRepo.findOne({name: answerJSON.questionName});
+    await connection.manager.save(answer);
+    res.send({status: true});
 });
 
-event.on('getAllExams',(res)=>{
-     typeorm.createConnection().then(async connection => {
-        res.send( await connection.getRepository(Exam).find());
-        await connection.close();
-    }).catch(error => console.log(error));
+event.on('getAllExams', async (res) => {
+    res.send(await connection.getRepository(Exam).find());
 });
 
 
-event.on('getExamDetails',(res, examName)=>{
-    typeorm.createConnection().then(async connection => {
-        let exam = await connection.getRepository(Exam).findOne({name: examName},{ relations: ["questions","questions.answers"] });
-        let data=[];
-         if(exam.hasOwnProperty('questions')) {
-            exam.questions.forEach(question => {
-                data.push({questionName: question.name, answers: question.answers});
-            });
-         }
-         res.send(data);
-        await connection.close();
-    }).catch(error => console.log(error));
+event.on('getExamDetails', async (res, examName) => {
+    let exam = await connection.getRepository(Exam).findOne({name: examName}, {relations: ["questions", "questions.answers"]});
+    let data = [];
+    if (exam.hasOwnProperty('questions')) {
+        exam.questions.forEach(question => {
+            data.push({questionName: question.name, answers: question.answers});
+        });
+    }
+    res.send(data);
 });
 
 
 
 
 ////////////////////////////////////////////////////////////
-event.on('generateUserExam',(res, examName, userName)=>{
-    typeorm.createConnection().then(async connection => {
-        let exam = await connection.getRepository(Exam).findOne({name: examName},{ relations: ["questions"] });
-        let candidate = await connection.getRepository(Candidate).findOne({username: userName});
-        let userExam = await connection.manager.findOne(UserExams, {exam: exam, candidate: candidate},{relations:["exam","candidate","questions","questions.answers"]});
-        let arrLength =2;
-        let generatedQuestions = getRandomElements(exam.questions,arrLength);
-        for( let i =0; i<arrLength; i++) {
-            let questionDetails = new QuestionDetail();
-            questionDetails.userExam = userExam;
-            questionDetails.question = generatedQuestions[i];
-            let wrongAns = await connection.manager.find(Answer,{question: questionDetails.question , correctness:false});
-            questionDetails.answers = getRandomElements(wrongAns,3);
-            let correctAns = await connection.manager.findOne(Answer,{question: questionDetails.question , correctness:true});
-            questionDetails.answers.push(correctAns);
-            shuffle(questionDetails.answers);
-            await connection.manager.save(questionDetails);
+event.on('getUserExam', async (req, res) => {
+
+
+    //user exam should come from sessions
+    let exam = await connection.getRepository(Exam).findOne({name: req.body.examName}, {relations: ["questions"]});
+    let candidate = await connection.getRepository(Candidate).findOne({username: req.body.userName});
+    let userExam = await connection.manager.findOne(UserExams, {exam: exam, candidate: candidate},
+        {relations: ["exam", "candidate","precedence","precedence.exam","precedence.candidate", "questions", "questions.question", "questions.chosenAnswer", "questions.answers"]});
+    let status = false;
+    let numOfQuestions = 3;
+
+    if (userExam.precedence.passed == null || userExam.precedence.passed) {
+        if (userExam.questions.length != numOfQuestions) {
+            let generatedQuestions = getRandomElements(exam.questions, numOfQuestions);
+            for (let i = 0; i < numOfQuestions; i++) {
+                let questionDetails = new QuestionDetail();
+                questionDetails.question = generatedQuestions[i];
+                let wrongAns = await connection.manager.find(Answer, {
+                    question: questionDetails.question,
+                    correctness: false
+                });
+                questionDetails.answers = getRandomElements(wrongAns, 3);
+                let correctAnswers = await connection.manager.find(Answer, {
+                    question: questionDetails.question,
+                    correctness: true
+                });
+                questionDetails.answers.push(getRandomElements(correctAnswers,1)[0]);
+                shuffle(questionDetails.answers);
+                questionDetails.userExam = userExam;
+                await connection.manager.save(questionDetails);
+                // userExam.questions.push(questionDetails);
+            }
+            userExam = await connection.manager.findOne(UserExams, {exam: exam, candidate: candidate},
+                {relations: ["exam", "candidate","precedence","precedence.exam","precedence.candidate", "questions", "questions.question", "questions.chosenAnswer", "questions.answers"]});
         }
         // await userExam.reload();
-        userExam = await connection.manager.findOne(UserExams, {exam: exam, candidate: candidate},
-            {relations:["exam","candidate","questions","questions.question","questions.chosenAnswer","questions.answers"]});
-        // console.log(userExam);
-        res.send(userExam);
-        await connection.close();
-    }).catch(error => console.log(error));
+        status = true;
+    }
+    res.send({status: status, userExam: userExam});
 });
 
 
-let getUserExam = ( examName, userName)=>{
-    return typeorm.createConnection().then(async connection => {
-        let exam = await connection.getRepository(Exam).findOne({name: examName},{ relations: ["questions"] });
-        let candidate = await connection.getRepository(Candidate).findOne({username: userName});
-        let userExam = await connection.manager.findOne(UserExams, {exam: exam, candidate: candidate},
-            {relations:["exam","candidate","questions","questions.question","questions.chosenAnswer","questions.answers"]});
-        await connection.close();
-        return userExam;
-    }).catch(error => console.log(error));
-};
+// let getUserExam = ( examName, userName)=>{
+//     return typeorm.createConnection().then(async connection => {
+//         let exam = await connection.getRepository(Exam).findOne({name: examName},{ relations: ["questions"] });
+//         let candidate = await connection.getRepository(Candidate).findOne({username: userName});
+//         let userExam = await connection.manager.findOne(UserExams, {exam: exam, candidate: candidate},
+//             {relations:["exam","candidate","questions","questions.question","questions.chosenAnswer","questions.answers"]});
+//         await connection.close();
+//         return userExam;
+//     }).catch(error => console.log(error));
+// };
 
 
 function getRandomElements(arr, numOfElements) {
@@ -136,6 +135,28 @@ function randomInt(low, high) {// low (inclusive) and high (exclusive) ([low, hi
     return Math.floor(Math.random() * (high - low) + low)
 }
 
+
+let getUserExam = async (examName, userName) => {
+    let exam = await connection.getRepository(Exam).findOne({name: examName}, {relations: ["questions"]});
+    let candidate = await connection.getRepository(Candidate).findOne({username: userName});
+    return await connection.manager.findOne(UserExams, {exam: exam, candidate: candidate},
+        {relations: ["exam", "candidate", "precedence", "precedence.exam", "precedence.candidate",
+                "questions", "questions.question", "questions.chosenAnswer", "questions.answers"]});
+
+};
+
+let updateSolvingUserExam = async (questionDetail)=>{
+    let userExam = await getUserExam('Java','sa2a');
+    //user exam should come from sessions
+
+    let questionD = userExam.questions.find((quesDetail)=> {return quesDetail.question.id == questionDetail.question.id});
+    let index = userExam.questions.indexOf(questionD);
+    if(index !=-1){
+        userExam.questions[index] = questionDetail;
+    }
+    await connection.getRepository(UserExams).save(userExam);
+};
+
 module.exports = {
-    event,getUserExam
+    event,getUserExam,updateSolvingUserExam
 };
