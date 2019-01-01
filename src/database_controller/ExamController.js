@@ -61,10 +61,12 @@ event.on('getExamDetails', async (res, examName) => {
 });
 
 
-
+let getExamByName = async (name) => {
+    return (await connection.getRepository(Exam).findOne({where:{name:name}}));
+};
 
 ////////////////////////////////////////////////////////////
 
 module.exports = {
-    event,getAllExams
+    event,getAllExams,getExamByName
 };

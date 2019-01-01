@@ -8,6 +8,8 @@ $(document).ready(function () {
         return self.indexOf(value) === index;
     }
     function initApplicationList() {
+        $("#postSelection").empty();
+        $("#postSelection").append("<option value='0'>All Application</option>");
         $.post("/getAllPositions",{id : 1},function (data) {
             let post;
             for(let i=0; i < data.length ; i++) {

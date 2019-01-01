@@ -2,6 +2,8 @@ const app = require('../app').app;
 const positionRepo = require("../database_controller/positionController");
 const positionApplicationRepo = require("../database_controller/positionApplicationController");
 const userExamsRepo = require("../database_controller/userExamController");
+const ExamRepo = require("../database_controller/ExamController");
+
 const HR = require("../entity/HR").HR;
 const Position = require("../entity/Position").Position;
 const PositionApplication = require("../entity/PositionApplication").PositionApplication;
@@ -76,13 +78,14 @@ app.post("/addUserExams", async (req,res)=>{
     {
         let userExam = new UserExams();
         userExam.candidate = candidate;
-        userExam.exam = exams[i];
+        userExam.exam = await ExamRepo.getExamByName(exams[i]);
         userExam.passed = false;
         userExam.score = 0.0;
         userExam.position = position;
         if(precedence[i] != "null")
         {
-            userExam.precedence = await userExamsRepo.findByCandidateAndExamAndPosition(candidate,precedence[i],position);
+            let temp = await ExamRepo.getExamByName(precedence[i]);
+            userExam.precedence = await userExamsRepo.findByCandidateAndExamAndPosition(candidate,temp.id,position);
         }
         await userExamsRepo.save(userExam);
     }
