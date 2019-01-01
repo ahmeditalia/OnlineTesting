@@ -7,8 +7,8 @@ const Answer =require('../entity/Answer').Answer;
 const Question = require('../entity/Question').Question;
 const Exam = require('../entity/Exam').Exam;
 const eventEmitter = require("events");
-const typeorm = require("typeorm");
-const connection = typeorm.getConnection();
+const connection = require("typeorm").getConnection();
+
 
 
 let event = new eventEmitter();
@@ -68,8 +68,10 @@ event.on('getUserExam', async (req, res) => {
 
 
     //user exam should come from sessions
-    let exam = await connection.getRepository(Exam).findOne({name: req.body.examName}, {relations: ["questions"]});
-    let candidate = await connection.getRepository(Candidate).findOne({username: req.body.userName});
+    let exam = req.session.exam;
+    let candidate = req.session.candidate;
+    // let exam = await connection.getRepository(Exam).findOne({name: req.body.examName}, {relations: ["questions"]});
+    // let candidate = await connection.getRepository(Candidate).findOne({username: req.body.userName});
     let userExam = await connection.manager.findOne(UserExams, {exam: exam, candidate: candidate},
         {relations: ["exam", "candidate","precedence","precedence.exam","precedence.candidate", "questions", "questions.question", "questions.chosenAnswer", "questions.answers"]});
     let status = false;
@@ -145,7 +147,8 @@ let getUserExam = async (examName, userName) => {
                 "questions", "questions.question", "questions.chosenAnswer", "questions.answers"]});
 };
 
-let updateSolvingUserExam = async (questionDetail, chosenAnsID)=> {
+let updateSolvingUserExam = async (req)=> {
+
     let userExam = await getUserExam('Java', 'sa2a');
     //user exam should come from sessions
 

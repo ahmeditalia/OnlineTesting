@@ -1,22 +1,25 @@
 $(document).ready(function () {
+    $("#divCv").hide();
     let flag =true;
-    $("#myonoffswitch").click(()=>{
+    $("#myonoffswitch2").click(()=>{
         flag = !flag;
         // if(flag)
         //     alert("HR");
         // else
         //     alert("Candidate");
     });
-    $("#login").click(() => {
-        if(!validationLogin())
+    $("#register").click(() => {
+        if(!validationٌRegister())
             return;
         let user = {
-            username: $("#user").val(),
-            password: $("#pass").val(),
-            hr:flag
+            username: $("#user2").val(),
+            password: $("#pass2").val(),
+            email: $("#email").val(),
+            contactNumber: $("#contact").val(),
+            cv : $("#cv").val()
         };
         $.ajax({
-            url: "login",
+            url: "request_register",
             type: "POST",
             dataType: 'json',
             contentType: 'application/json; charset=utf-8',

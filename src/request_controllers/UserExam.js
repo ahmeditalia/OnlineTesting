@@ -8,15 +8,16 @@ app.post('/examPage',(req,res)=>{
 });
 
 app.post('/userExam/selectAnswer', async (req, res) => {
-    await examController.updateSolvingUserExam(req.body.questionDetail, req.body.chosenAnswerID);
+    await examController.updateSolvingUserExam(req);
     res.send("Answer saved");
 });
 
 app.post('/userExam/updateResults', async (req, res) => {
-    await examController.updateUserExamResults(req.body.examName, req.body.userName);
+    await examController.updateUserExamResults(req);
+    res.send('results updated');
 });
 
 app.post('/examResultPage', async (req, res) => {
-    let userExam = await examController.getUserExam(req.body.examName, req.body.userName);
+    let userExam = await examController.getUserExam(req);
     res.send(userExam);
 });

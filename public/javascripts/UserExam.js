@@ -46,10 +46,6 @@ $(document).ready(()=>{
                         //radio answers
                         $(`input[type=radio][name=${questionDetails.question.id}]`).change(() => {
                             let ansId = $(`input[name=${questionDetails.question.id}]:checked`).val();
-                            // let answer = questionDetails.answers.find((element) => {
-                            //     return element.id == ansId;
-                            // });
-                            // questionDetails.chosenAnswer = answer;
 
                             $.ajax({
                                 url:'/userExam/selectAnswer',
@@ -96,6 +92,9 @@ $(document).ready(()=>{
             data: {
                 userName: userName,
                 examName: examName
+            },
+            success:(status)=>{
+                console.log(status);
             }
         });
     });
