@@ -7,7 +7,7 @@ $(document).ready(function () {
        }
     });
     $.ajax({
-        url: "/getUserInfo",/**get info */
+        url: "/getUserInfo",
             type: "POST",
             dataType: 'json',
             contentType: 'application/json; charset=utf-8',
@@ -26,33 +26,35 @@ $(document).ready(function () {
             + "</table>";
         $('#view').append(table);
         $.ajax({
-            url: "/getAllPositions",
+            url: "/getAllSysPositions",
             type: "POST",
             dataType: 'json',
             contentType: 'application/json; charset=utf-8',
             success: (data) => {
                 for(var i=0;i<data.length;i++) {
                     let row = "<tr>"
-                        + "<td>" + data[i].HR + "</td>"
-                        + "<td>" + data[i].Application + "</td>"
+                        + "<td>" + data[i].hr.username + "</td>"
+                        + "<td>" + data[i].name+", ["+data[i].description+ "]</td>"
                         + "<td style='text-align: center;'>"
-                        + "<button id='ch1'>reg</button>"
+                        + "<button name ='ch1' id="+data[i].id+">reg</button>"
                         + "</td>"
                         + "</tr>";
                     $('#body').append(row);
                 }
+                $('button[name=ch1]').click(function () {
+                    alert(this.id);
+                    $.post('/applyPosition',{position:this.id});
+                });
             }
         });
-        $('#ch1').click(function () {
-            alert("choice");
-        });
+
     });
     $('#myPositions').click(function () {
         $('#view').empty();
         let table = "<table class='container'>"
             + "<thead>"
-            + "<th>HR</th>"
-            + "<th>Application</th>"
+            + "<th>Position Name</th>"
+            + "<th>Description</th>"
             + "<th>Exams</th></thead>"
             + "<tbody id='body'></tbody>"
             + "</table>";
@@ -65,21 +67,34 @@ $(document).ready(function () {
             success: (data) => {
                 for (var i = 0; i < data.length; i++) {
                     let row = "<tr>"
-                        + "<td>" + data[i].HR + "</td>"
-                        + "<td>" + data[i].Application + "</td>"
+                        + "<td>" + data[i].position.name+ "</td>"
+                        + "<td>" + data[i].position.description + "</td>"
                         + "<td style='text-align: center;'>";
-                    let td;
-                    for (var j = 0; j < data[i].exams.length; j++) {
-                        td += "<button id='ch1'><data[i].exams[j]</button>";
+                    let td ="";
+                    if(data[i].accepted) {
+                        $.post('/getUserExamsForPos', {position: data[i].position}, (userExams) => {
+                            console.log(userExams);
+                            for (var j = 0; j < userExams.length; j++) {
+                                td += "<button name='exam' id='" + userExams[j].id + "'>" + userExams[j].exam.name + "</button>";
+                            }
+                        });
                     }
-                    tr += td + "</td>"
+                    else if(!data[i].seen){
+                        td += "on hold";
+                    }
+                    else if(data[i].seen && !data[i].accepted){
+                        td += "rejected";
+                    }
+                    row += td + "</td>"
                         + "</tr>";
                     $('#body').append(row);
                 }
+                $('button[name=exam]').click(function () {
+                    $.post('/examPage',{userExamId:this.id},(data)=>{
+                        window.location = data.url;
+                    });
+                });
             }
-        });
-        $('#ch1').click(function () {
-            alert("choice");
         });
     });
 });

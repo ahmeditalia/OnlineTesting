@@ -52,8 +52,15 @@ findByUsernamePasswordCandidate = async function (username, password) {
     return null;
 };
 
+let getUserInfo = async function (req,res) {
+    const exists_user = await connection.getRepository(HR).findOne({where: {id: req.session.user.id}});
+    if (exists_user != null) {
+        return exists_user;
+    }
+    return null;
+};
 
 module.exports = {
     findByUsernamePasswordHR,
-    findByUsernamePasswordCandidate
+    findByUsernamePasswordCandidate,getUserInfo
 };

@@ -158,8 +158,9 @@ $(document).ready(function () {
         $("#showDiv").append("<button id='send'>Send</button>");
         $.post("/getExams",function (data) {
             exams = data;
+            updateExamList();
         });
-        updateExamList();
+
         $("#addExam").click(()=>{
             let row = "<tr>\n" +
                 "                    <td>\n" +
@@ -182,7 +183,7 @@ $(document).ready(function () {
             let exam;
             for(let i=0; i < exams.length ; i++) {
                 exam = exams[i];
-                let option = "<option value='" + exam.id + "'>" + exam.name + "</option>";
+                let option = "<option value='" + exam.name + "'>" + exam.name + "</option>";
                 // let option = "<option value='" + exam + "'>" + exam+ "</option>";
                 $('#examTableBody tr:last').find("select[name='exam']").append(option);
             }

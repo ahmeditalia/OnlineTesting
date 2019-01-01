@@ -10,30 +10,25 @@ const examController= require('../database_controller/ExamController');
 
 
 app.post("/getAllPositions", async (req, res) => {
-    let id = JSON.parse(req.body.id);
+    let id = req.session.user.id;
     let temp = await positionRepo.findByHR(id);
     res.send(temp);
 });
 
-app.post("/addPosition", (req,res)=>{
+app.post("/addPosition", async (req, res) => {
     let temp = req.body;
     let position = new Position();
-    //req.getSession().getParameter()
-    //position.hr = ;//get hr
-    let hr = new HR();
-    hr.id=1;
     position.name = temp.name;
     position.description = temp.description;
-    position.hr=hr;
-    positionRepo.Emitter.emit("save",position);
+    position.hr =req.session.user;
+    await positionRepo.save(position);
 });
 
 
 app.post("/allPositionApplicant",async (req,res)=>{
-    let hrid= 1;
     let acceptance = JSON.parse(req.body.acceptance);
     let seen = JSON.parse(req.body.seen);
-    let Positions = await positionRepo.findByHR(hrid);
+    let Positions = await positionRepo.findByHR(req.session.user.id);
     let positionApplications = [];
     for(let i=0;i<Positions.length;i++)
     {
@@ -107,7 +102,19 @@ app.post("/getUserExams", async (req,res)=>{
     res.send(userExams);
 });
 
-app.post('/getAllPositions', async (req, res) => {
+app.post("/getUserExamsForPos", async (req,res)=>{
+    let candidate = req.session.user;
+    let position = req.body.position;
+    let userExams = await userExamsRepo.findByCandidateAndPosition(candidate,position);
+    for(let i=0;i<userExams.length;i++)
+    {
+        if(userExams[i].precedence)
+            userExams[i].precedence = await userExamsRepo.findById(userExams[i].precedence.id);
+    }
+    res.send(userExams);
+});
+
+app.post('/getAllSysPositions', async (req, res) => {
     res.send(await positionRepo.getAllPositions());
 });
 
@@ -117,4 +124,13 @@ app.post('/getMyPositions', async (req, res) => {
 
 app.post('/getExams', async (req, res) => {
     res.send(await examController.getAllExams());
+});
+
+app.post("/applyPosition",async (req,res)=>{
+    let application = new PositionApplication();
+    application.candidate = req.session.user;
+    application.position = req.body.position;
+    application.accepted = false;
+    application.seen = false;
+    await positionApplicationRepo.save(application);
 });

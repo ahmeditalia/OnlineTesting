@@ -1,4 +1,10 @@
-const UserExams = require("../entity/UserExams").UserExams;
+const shuffle = require('shuffle-array');
+const UserExams = require('../entity/UserExams').UserExams;
+const Candidate = require('../entity/Candidate').Candidate;
+const QuestionDetail = require('../entity/QuestionDetail').QuestionDetail;
+const Answer =require('../entity/Answer').Answer;
+const Question = require('../entity/Question').Question;
+const Exam = require('../entity/Exam').Exam;
 const metadata = require("reflect-metadata");
 const getConnection = require("typeorm").getConnection();
 const eventEmitter = require("events");
@@ -55,15 +61,18 @@ event.on('getUserGeneratedExam', async (req, res) => {
 
 
     //user exam should come from sessions
-    let exam = req.session.exam;
-    let candidate = req.session.candidate;
+    // let exam = req.session.exam;
+    // let candidate = req.session.candidate;
     // let exam = await connection.getRepository(Exam).findOne({name: req.body.examName}, {relations: ["questions"]});
     // let candidate = await connection.getRepository(Candidate).findOne({username: req.body.userName});
-    let userExam = await connection.manager.findOne(UserExams, {exam: exam, candidate: candidate},
+
+    let userExam = await connection.manager.findOne(UserExams, {id: req.session.userExamID},
         {relations: ["exam", "candidate","precedence","precedence.exam","precedence.candidate", "questions", "questions.question", "questions.chosenAnswer", "questions.answers"]});
+
+    let exam = userExam.exam;
+    let candidate = userExam.candidate;
     let status = false;
     let numOfQuestions =3;
-
     if (userExam.precedence == null || userExam.precedence.passed) {
         if (userExam.questions.length != numOfQuestions) {
             let generatedQuestions = getRandomElements(exam.questions, numOfQuestions);
@@ -85,14 +94,16 @@ event.on('getUserGeneratedExam', async (req, res) => {
                 await connection.manager.save(questionDetails);
                 // userExam.questions.push(questionDetails);
             }
-            userExam = await connection.manager.findOne(UserExams, {exam: exam, candidate: candidate},
+            userExam = await connection.manager.findOne(UserExams, {id: req.session.userExamID},
                 {relations: ["exam", "candidate","precedence","precedence.exam","precedence.candidate", "questions", "questions.question", "questions.chosenAnswer", "questions.answers"]});
         }
         // await userExam.reload();
         status = true;
     }
+    req.session.userExam = userExam;
     res.send({status: status, userExam: userExam});
 });
+
 
 
 // let getUserExam = ( examName, userName)=>{
@@ -134,17 +145,30 @@ let getUserExam = async (examName, userName) => {
                 "questions", "questions.question", "questions.chosenAnswer", "questions.answers"]});
 };
 
+
+
+let getUserEx = async (req) => {
+    return await connection.manager.findOne(UserExams, {id: req.session.userExamID},
+        {relations: ["exam", "candidate", "precedence", "precedence.exam", "precedence.candidate", "questions", "questions.question", "questions.chosenAnswer", "questions.answers"]});
+
+};
 let updateSolvingUserExam = async (req)=> {
 
-    let userExam = await getUserExam('Java', 'sa2a');
-    //user exam should come from sessions
 
+    //user exam should come from sessions
+    let userExam = await connection.manager.findOne(UserExams, {id: req.session.userExamID},
+        {relations: ["exam", "candidate","precedence","precedence.exam","precedence.candidate", "questions", "questions.question", "questions.chosenAnswer", "questions.answers"]});
+
+    let questionDetail = req.body.questionDetail;
+    let chosenAnsID = req.body.chosenAnswerID;
     await connection.getRepository(QuestionDetail).update({userExam: userExam, question: questionDetail.question},
         {chosenAnswer: chosenAnsID});
 };
 
-let updateUserExamResults = async (examName, userName) => {
-    let userExam = await getUserExam(examName, userName);//sessions
+let updateUserExamResults = async (req) => {
+
+    let userExam = await connection.manager.findOne(UserExams, {id: req.session.userExamID},
+        {relations: ["exam", "candidate","precedence","precedence.exam","precedence.candidate", "questions", "questions.question", "questions.chosenAnswer", "questions.answers"]});
     let score = 0 ;
     let numOfQuestions= userExam.questions.length;
     userExam.questions.forEach((questionDetail)=>{
@@ -168,5 +192,5 @@ module.exports ={
     findByCandidateAndExamAndPosition,
     findByCandidateAndPosition,
     findById,
-    getUserExam,updateSolvingUserExam, updateUserExamResults
+    getUserExam,updateSolvingUserExam, updateUserExamResults,getUserEx
 };

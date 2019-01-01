@@ -26,32 +26,18 @@ app.post("/login", async (req, res) => {
         req.session.user = result;
         if(result instanceof HR)
         {
-            res.send({url:'/HR.html'});
-            // let location = path.join(__dirname,"../../public");
-            //
-            // res.writeHead(200,{'Content-Type': 'text/html'})
-            // fs.readFile(path.join(location,'/HR.html'),null, (error, data)=>{
-            //     if(error){
-            //         res.writeHead(404);
-            //         res.write("not fount");
-            //         console.log("not fount");
-            //     }
-            //     else{
-            //         res.write(data);
-            //         console.log(data);
-            //     }
-            //     res.end();
-            // });
-            // let location = path.join(__dirname,"../../public");
-            // // console.log(location);
-            // res.sendFile(path.join(location,'/HR.html'));
-            // res.sendFile('HR.html');
+            res.send({status:true, url:'/HR.html'});
         }
         else
-            res.redirect('/ManageExams.html');
+            res.send({status:true, url:'/candidate.html'});
     }
     else
     {
-        res.end('{"success" : "Not Exists"}');
+        res.end({status:false});
     }
+});
+
+app.post("/getUserInfo" ,async (req,res)=>{
+    let user = await userFind.getUserInfo(req,res);
+    res.send(user);
 });

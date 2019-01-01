@@ -4,8 +4,8 @@
 
 
 $(document).ready(()=>{
-    let userName = 'sa2a';
-    let examName = 'Java';
+    // let userName = 'sa2a';
+    // let examName = 'Java';
     let numOfQuestions=0;
    $(`input[name=numOfAnsweredQ]`).val(0);
    $(`input[name=numOfMarkedQ]`).val(0);
@@ -19,10 +19,10 @@ $(document).ready(()=>{
             url: 'examPage',
             type: "POST",
 
-            data: {
-                userName: userName,
-                examName: examName
-            },
+            // data: {
+            //     userName: userName,
+            //     examName: examName
+            // },
 
             dataType:'json',
             success:(data)=> {
@@ -89,10 +89,6 @@ $(document).ready(()=>{
         $.ajax({
             url:'userExam/updateResults',
             type: 'POST',
-            data: {
-                userName: userName,
-                examName: examName
-            },
             success:(status)=>{
                 console.log(status);
             }

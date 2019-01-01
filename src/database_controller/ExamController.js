@@ -1,8 +1,4 @@
 
-const shuffle = require('shuffle-array');
-const UserExams = require('../entity/UserExams').UserExams;
-const Candidate = require('../entity/Candidate').Candidate;
-const QuestionDetail = require('../entity/QuestionDetail').QuestionDetail;
 const Answer =require('../entity/Answer').Answer;
 const Question = require('../entity/Question').Question;
 const Exam = require('../entity/Exam').Exam;

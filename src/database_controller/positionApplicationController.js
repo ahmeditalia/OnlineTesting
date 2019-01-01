@@ -52,10 +52,10 @@ let findByPositionIDAndAcceptedAndSeen = async function (Position,acceptance,see
     return positions;
 };
 
-Emitter.on("save",async (application) =>{
+let save = async function (application){
         let applicationRepo = await getConnection.getRepository(PositionApplication);
         await applicationRepo.save(application);
-});
+};
 
 
 //Emitter.on("update",(application) =>{
@@ -66,7 +66,8 @@ let update = async function (application){
         {accepted: application.accepted, seen: application.seen});
 };
 let getApliedPositions = async (user) => {
-    return await getConnection.getRepository(PositionApplication).find({candidate: user});
+    return await getConnection.getRepository(PositionApplication).find({where:{candidate: user},relations:['position','position.hr']});
+
 };
 module.exports ={
     update,
@@ -74,5 +75,5 @@ module.exports ={
     findByPositionIDAndAccepted,
     findByPositionIDAndSeen,
     findByPositionIDAndAcceptedAndSeen,
-    getApliedPositions
+    getApliedPositions,save
 };

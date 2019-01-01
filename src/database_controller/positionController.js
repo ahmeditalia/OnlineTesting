@@ -1,9 +1,8 @@
 
 const metadata = require("reflect-metadata");
-const eventEmitter = require("events");
+
 const Position = require("../entity/Position").Position;
 const getConnection = require("typeorm").getConnection();
-let Emitter = new eventEmitter();
 
 
 let findByHR = async function (HR)
@@ -17,19 +16,19 @@ let findByHR = async function (HR)
 };
 
 
-Emitter.on("save",async (position) =>{
+let save = async (position) =>{
     let positionRepo = await getConnection.getRepository(Position);
     await positionRepo.save(position);
-});
+};
 
 
 let getAllPositions = async () => {
-    return await getConnection.getRepository(Position).find();
+    return await getConnection.getRepository(Position).find({relations:["hr"]});
 };
 
 
 module.exports ={
-    Emitter,
     findByHR,
-    getAllPositions
+    getAllPositions,
+    save
 };

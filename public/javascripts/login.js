@@ -28,8 +28,10 @@ $(document).ready(function () {
             data: JSON.stringify(user),
 
             success: (data) => {
-                console.log(data);
-                window.location.replace(data.url);
+                if(data.status)
+                    window.location.replace(data.url);
+                else
+                    alert('not exists');
             }
         });
     });
