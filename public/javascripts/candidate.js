@@ -11,13 +11,12 @@ $(document).ready(function () {
             type: "POST",
             dataType: 'json',
             contentType: 'application/json; charset=utf-8',
-            data: '',
             success: (data) => {
                 $('#info').html('<p> Welcome, '+data.username+'</p>');
             }
     });
     $('#allPositions').click(function () {
-        $('#allApplications').empty();
+        $('#view').empty();
         let table = "<table class='container'>"
             + "<thead>"
             + "<th>HR</th>"
@@ -25,30 +24,58 @@ $(document).ready(function () {
             + "<th>Register</th></thead>"
             + "<tbody id='body'></tbody>"
             + "</table>";
-        $('#allApplications').append(table);
-        // row = "<tr>"
-        //         + "<td>" + da.HR + "</td>"
-        //         + "<td>" + da.Application + "</td>"
-        //         + "<td style='text-align: center;'>"
-        //         + "<button id='ch1'>reg</button>"
-        //         + "</td>"
-        //         + "</tr>";
-        //         $('#body').append(row);
+        $('#view').append(table);
         $.ajax({
-            url: "/",
+            url: "/getAllPositions",
             type: "POST",
             dataType: 'json',
             contentType: 'application/json; charset=utf-8',
-            data: /*data*/'',
             success: (data) => {
-                row = "<tr>"
-                + "<td>" + data.HR + "</td>"
-                + "<td>" + data.Application + "</td>"
-                + "<td style='text-align: center;'>"
-                + "<button id='ch1'>reg</button>"
-                + "</td>"
-                + "</tr>";
-                $('#body').append(row);
+                for(var i=0;i<data.length;i++) {
+                    let row = "<tr>"
+                        + "<td>" + data[i].HR + "</td>"
+                        + "<td>" + data[i].Application + "</td>"
+                        + "<td style='text-align: center;'>"
+                        + "<button id='ch1'>reg</button>"
+                        + "</td>"
+                        + "</tr>";
+                    $('#body').append(row);
+                }
+            }
+        });
+        $('#ch1').click(function () {
+            alert("choice");
+        });
+    });
+    $('#myPositions').click(function () {
+        $('#view').empty();
+        let table = "<table class='container'>"
+            + "<thead>"
+            + "<th>HR</th>"
+            + "<th>Application</th>"
+            + "<th>Exams</th></thead>"
+            + "<tbody id='body'></tbody>"
+            + "</table>";
+        $('#view').append(table);
+        $.ajax({
+            url: "/getMyPositions",
+            type: "POST",
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: (data) => {
+                for (var i = 0; i < data.length; i++) {
+                    let row = "<tr>"
+                        + "<td>" + data[i].HR + "</td>"
+                        + "<td>" + data[i].Application + "</td>"
+                        + "<td style='text-align: center;'>";
+                    let td;
+                    for (var j = 0; j < data[i].exams.length; j++) {
+                        td += "<button id='ch1'><data[i].exams[j]</button>";
+                    }
+                    tr += td + "</td>"
+                        + "</tr>";
+                    $('#body').append(row);
+                }
             }
         });
         $('#ch1').click(function () {
