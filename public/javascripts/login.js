@@ -15,14 +15,21 @@ $(document).ready(function () {
             password: $("#pass").val(),
             hr:flag
         };
+        // $.post("login",(user),(data) => {
+        //             alert(data.success);
+        //
+        //         });
+
         $.ajax({
             url: "login",
             type: "POST",
             dataType: 'json',
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(user),
+
             success: (data) => {
-                alert(data.success);
+                console.log(data);
+                window.location.replace(data.url);
             }
         });
     });

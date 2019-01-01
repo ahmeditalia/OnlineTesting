@@ -6,7 +6,7 @@ const HR = require("../entity/HR").HR;
 const Position = require("../entity/Position").Position;
 const PositionApplication = require("../entity/PositionApplication").PositionApplication;
 const UserExams = require("../entity/UserExams").UserExams;
-
+const examController= require('../database_controller/ExamController');
 
 
 app.post("/getAllPositions", async (req, res) => {
@@ -113,4 +113,8 @@ app.post('/getAllPositions', async (req, res) => {
 
 app.post('/getMyPositions', async (req, res) => {
     res.send(await positionApplicationRepo.getApliedPositions(req.session.user));
+});
+
+app.post('/getExams', async (req, res) => {
+    res.send(await examController.getAllExams());
 });

@@ -14,12 +14,16 @@ createConnection.then(()=> {
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(session({secret: "secret", saveUninitialized: true, resave: false}));
 
+    app.set('views',location);
+    app.engine('html', require('ejs').renderFile);
+    app.set('view engine', 'ejs');
+
     app.listen(3000,()=>{
         console.log("application has started on port 3000");
     });
 
     module.exports ={
-        app
+        app,path
     };
 
     const hr = require("./request_controllers/hrController");

@@ -27,9 +27,9 @@ findByUsernamePasswordHR = async function (username, password) {
     });
     if (exists_user != null) {
         console.log(exists_user);
-        return true;
+        return exists_user;
     }
-    return false;
+    return null;
 };
 
 
@@ -47,9 +47,9 @@ findByUsernamePasswordCandidate = async function (username, password) {
     if (exists_user != null) {
         console.log(exists_user);
 
-        return true;
+        return exists_user;
     }
-    return false;
+    return null;
 };
 
 

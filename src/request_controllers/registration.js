@@ -5,7 +5,7 @@ app.post("/request_register", async (req, res) => {
     console.log("start");
     let user = req.body;
     let result;
-    if (user.cv == "") {
+    if (user.type) {
         result = await CreateOrExists.checkExistsOrCreateHR(user);
     }
     else {

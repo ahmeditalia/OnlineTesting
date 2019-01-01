@@ -32,7 +32,7 @@ function validationLogin() {
     return false;
 }
 
-function validationٌRegister() {
+function validationٌRegister(flag) {
     let filterpass = /^([a-zA-Z0-9]){8,32}$/;
     let filtermail = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
     let username = document.getElementById("user2").value;
@@ -97,7 +97,14 @@ function validationٌRegister() {
     }
 
 
-    if (flag1 && flag2 && flag3 && flag4 && flag5)
-        return true;
+
+    if (flag1 && flag2 && flag3 && flag4 )
+    {
+        if (flag){
+            return true;
+        }
+        else if (flag5)
+            return true;
+    }
     return false;
 }
