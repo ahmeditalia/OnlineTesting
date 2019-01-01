@@ -5,23 +5,34 @@ const eventEmitter = require("events");
 
 var Emitter = new eventEmitter();
 
-let findByCandidate = async function (candidate)
+let findById = async function (id)
 {
-    let positionRepo = await getConnection.getRepository(UserExams);
-    let Exams = await positionRepo.find(
-        {
-            where: {candidate: candidate},
-            relations : ["exam","candidate","precedence","questions"]
+    let userExamRepo = await getConnection.getRepository(UserExams);
+    let Exams = await userExamRepo.findOne(id,{
+            relations : ["exam","candidate","precedence","questions","position"]
         });
     return Exams;
 };
 
-let findByCandidateAndExam =async function (candidate,exam)
+
+let findByCandidateAndPosition = async function (candidate,position)
 {
-    let positionRepo = await getConnection.getRepository(UserExams);
-    let Exams = await positionRepo.findOne(
+    let userExamRepo = await getConnection.getRepository(UserExams);
+    let Exams = await userExamRepo.find(
         {
-            where: {exam: exam, candidate: candidate},
+            where: {candidate: candidate,position: position},
+            relations : ["exam","candidate","precedence","questions","position"]
+        });
+    return Exams;
+};
+
+
+let findByCandidateAndExamAndPosition =async function (candidate,exam,position)
+{
+    let userExamRepo = await getConnection.getRepository(UserExams);
+    let Exams = await userExamRepo.findOne(
+        {
+            where: {exam: exam, candidate: candidate,position: position},
             relations : ["exam","candidate","precedence","questions"]
         });
     return Exams;
@@ -30,14 +41,14 @@ let findByCandidateAndExam =async function (candidate,exam)
 
 //Emitter.on("save",(userExam) =>{
 let save = async function (userExam){
-    let positionRepo = await getConnection.getRepository(UserExams);
-    await positionRepo.save(userExam);
-    console.log("1");
+    let userExamRepo = await getConnection.getRepository(UserExams);
+    await userExamRepo.save(userExam);
 };
 
 
 module.exports ={
     save,
-    findByCandidateAndExam,
-    findByCandidate
+    findByCandidateAndExamAndPosition,
+    findByCandidateAndPosition,
+    findById
 };

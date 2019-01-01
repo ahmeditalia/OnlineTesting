@@ -13,13 +13,14 @@ var typeorm_1 = require("typeorm");
 var Exam_1 = require("./Exam");
 var Candidate_1 = require("./Candidate");
 var QuestionDetail_1 = require("./QuestionDetail");
+var Position_1 = require("./Position");
 var UserExams = /** @class */ (function () {
     function UserExams() {
     }
     UserExams_1 = UserExams;
     __decorate([
         typeorm_1.PrimaryGeneratedColumn(),
-        __metadata("design:type", String)
+        __metadata("design:type", Number)
     ], UserExams.prototype, "id", void 0);
     __decorate([
         typeorm_1.ManyToOne(function (type) { return Exam_1.Exam; }),
@@ -46,6 +47,10 @@ var UserExams = /** @class */ (function () {
         typeorm_1.OneToMany(function (type) { return QuestionDetail_1.QuestionDetail; }, function (questionDetail) { return questionDetail.userExam; }),
         __metadata("design:type", Array)
     ], UserExams.prototype, "questions", void 0);
+    __decorate([
+        typeorm_1.ManyToOne(function (type) { return Position_1.Position; }),
+        __metadata("design:type", Position_1.Position)
+    ], UserExams.prototype, "position", void 0);
     UserExams = UserExams_1 = __decorate([
         typeorm_1.Entity()
     ], UserExams);
