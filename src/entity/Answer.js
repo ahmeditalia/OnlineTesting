@@ -22,7 +22,7 @@ var Answer = /** @class */ (function () {
     __decorate([
         typeorm_1.Column('text'),
         __metadata("design:type", String)
-    ], Answer.prototype, "answer", void 0);
+    ], Answer.prototype, "name", void 0);
     __decorate([
         typeorm_1.Column(),
         __metadata("design:type", Boolean)

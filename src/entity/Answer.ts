@@ -9,7 +9,7 @@ export class Answer {
     id: number;
 
     @Column('text')
-    answer: string;
+    name: string;
 
     @Column()
     correctness: boolean;
