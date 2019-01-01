@@ -29,19 +29,35 @@ app.post("/addPosition", (req,res)=>{
 });
 
 
+app.post("/allPositionApplicant",async (req,res)=>{
+    let hrid= 1;
+    let acceptance = JSON.parse(req.body.acceptance);
+    let seen = JSON.parse(req.body.seen);
+    let Positions = await positionRepo.findByHR(hrid);
+    let positionApplications = [];
+    for(let i=0;i<Positions.length;i++)
+    {
+        let temp = await positionApplicationRepo.findByPositionIDAndAcceptedAndSeen(Positions[i].id,acceptance,seen);
+        positionApplications = positionApplications.concat(temp);
+    }
+    for(let i=0;i<positionApplications.length;i++)
+    {
+        delete positionApplications[i].candidate.password;
+    }
+    res.send(positionApplications);
+});
+
+
 app.post("/positionApplicant",async (req,res)=>{
     let positionID = req.body.positionID;
     let acceptance = JSON.parse(req.body.acceptance);
     let seen = JSON.parse(req.body.seen);
     let positionApplications = await positionApplicationRepo.findByPositionIDAndAcceptedAndSeen(positionID,acceptance,seen);
-    let candidates = [];
     for(let i=0;i<positionApplications.length;i++)
     {
-        let candidate = positionApplications[i].candidate;
-        delete candidate.password;
-        candidates.push(candidate);
+        delete positionApplications[i].candidate.password;
     }
-    res.send(candidates);
+    res.send(positionApplications);
 });
 
 app.post("/updateApplication",async (req,res)=>{
@@ -52,6 +68,7 @@ app.post("/updateApplication",async (req,res)=>{
     application.seen = true;
     application.accepted = JSON.parse(req.body.accepted);
     await positionApplicationRepo.update(application);
+    res.send();
 });
 
 app.post("/addUserExams", async (req,res)=>{
@@ -59,6 +76,7 @@ app.post("/addUserExams", async (req,res)=>{
     let exams = req.body.exams;
     let precedence = req.body.precedence;
     let candidate = JSON.parse(req.body.candidate);
+    let position = req.body.position;
     for(let i=0;i<exams.length;i++)
     {
         let userExam = new UserExams();
@@ -66,12 +84,33 @@ app.post("/addUserExams", async (req,res)=>{
         userExam.exam = exams[i];
         userExam.passed = false;
         userExam.score = 0.0;
+        userExam.position = position;
         if(precedence[i] != "null")
         {
-            userExam.precedence = await userExamsRepo.findByCandidateAndExam(candidate,precedence[i]);
+            userExam.precedence = await userExamsRepo.findByCandidateAndExamAndPosition(candidate,precedence[i],position);
         }
-        //console.log("blablabla");
         await userExamsRepo.save(userExam);
-        console.log("2");
     }
+    res.send();
+});
+
+
+app.post("/getUserExams", async (req,res)=>{
+    let candidate = req.body.candidate;
+    let position = req.body.position;
+    let userExams = await userExamsRepo.findByCandidateAndPosition(candidate,position);
+    for(let i=0;i<userExams.length;i++)
+    {
+        if(userExams[i].precedence)
+            userExams[i].precedence = await userExamsRepo.findById(userExams[i].precedence.id);
+    }
+    res.send(userExams);
+});
+
+app.post('/getAllPositions', async (req, res) => {
+    res.send(await positionRepo.getAllPositions());
+});
+
+app.post('/getMyPositions', async (req, res) => {
+    res.send(await positionApplicationRepo.getApliedPositions(req.session.user));
 });

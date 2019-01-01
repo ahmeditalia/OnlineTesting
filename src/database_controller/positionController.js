@@ -1,3 +1,4 @@
+
 const metadata = require("reflect-metadata");
 const eventEmitter = require("events");
 const Position = require("../entity/Position").Position;
@@ -22,7 +23,13 @@ Emitter.on("save",async (position) =>{
 });
 
 
+let getAllPositions = async () => {
+    return await getConnection.getRepository(Position).find();
+};
+
+
 module.exports ={
     Emitter,
-    findByHR
+    findByHR,
+    getAllPositions
 };

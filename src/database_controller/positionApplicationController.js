@@ -12,7 +12,7 @@ let findByPositionID = async function (Position)
     let positionRepo = await getConnection.getRepository(PositionApplication);
     let positions = await positionRepo.find(
         {
-            relations :["candidate"],
+            relations :["position","candidate"],
             where: {position: Position}
         });
     return positions;
@@ -23,7 +23,7 @@ let findByPositionIDAndAccepted = async function (Position,acceptance)
     let positionRepo = await getConnection.getRepository(PositionApplication);
     let positions = await positionRepo.find(
         {
-            relations :["candidate"],
+            relations :["position","candidate"],
             where: {position: Position , accepted: acceptance}
         });
     return positions;
@@ -35,7 +35,7 @@ let findByPositionIDAndSeen = async function (Position,seen)
     let positionRepo = await getConnection.getRepository(PositionApplication);
     let positions = await positionRepo.find(
         {
-            relations :["candidate"],
+            relations :["position","candidate"],
             where: {position: Position , seen: seen}
         });
     return positions;
@@ -46,7 +46,7 @@ let findByPositionIDAndAcceptedAndSeen = async function (Position,acceptance,see
     let positionRepo = await getConnection.getRepository(PositionApplication);
     let positions = await positionRepo.find(
         {
-            relations :["candidate"],
+            relations :["position","candidate"],
             where: {position: Position ,accepted: acceptance, seen: seen}
         });
     return positions;
@@ -65,11 +65,14 @@ let update = async function (application){
         {position: application.position,candidate: application.candidate},
         {accepted: application.accepted, seen: application.seen});
 };
-
+let getApliedPositions = async (user) => {
+    return await getConnection.getRepository(PositionApplication).find({candidate: user});
+};
 module.exports ={
     update,
     findByPositionID,
     findByPositionIDAndAccepted,
     findByPositionIDAndSeen,
-    findByPositionIDAndAcceptedAndSeen
+    findByPositionIDAndAcceptedAndSeen,
+    getApliedPositions
 };
