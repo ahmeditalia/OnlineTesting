@@ -7,6 +7,7 @@ const Question = require('../entity/Question').Question;
 const Exam = require('../entity/Exam').Exam;
 const metadata = require("reflect-metadata");
 const getConnection = require("typeorm").getConnection();
+const connection = getConnection;
 const eventEmitter = require("events");
 
 let event = new eventEmitter();
@@ -66,13 +67,10 @@ event.on('getUserGeneratedExam', async (req, res) => {
     // let exam = await connection.getRepository(Exam).findOne({name: req.body.examName}, {relations: ["questions"]});
     // let candidate = await connection.getRepository(Candidate).findOne({username: req.body.userName});
 
-    let userExam = await connection.manager.findOne(UserExams, {id: req.session.userExamID},
-        {relations: ["exam", "candidate","precedence","precedence.exam","precedence.candidate", "questions", "questions.question", "questions.chosenAnswer", "questions.answers"]});
-
+    let userExam = await getUserEx(req);
     let exam = userExam.exam;
-    let candidate = userExam.candidate;
     let status = false;
-    let numOfQuestions =3;
+    let numOfQuestions =4;
     if (userExam.precedence == null || userExam.precedence.passed) {
         if (userExam.questions.length != numOfQuestions) {
             let generatedQuestions = getRandomElements(exam.questions, numOfQuestions);
@@ -88,20 +86,22 @@ event.on('getUserGeneratedExam', async (req, res) => {
                     question: questionDetails.question,
                     correctness: true
                 });
-                questionDetails.answers.push(getRandomElements(correctAnswers,1)[0]);
+                questionDetails.answers.push(getRandomElements(correctAnswers, 1)[0]);
                 shuffle(questionDetails.answers);
                 questionDetails.userExam = userExam;
                 await connection.manager.save(questionDetails);
                 // userExam.questions.push(questionDetails);
             }
-            userExam = await connection.manager.findOne(UserExams, {id: req.session.userExamID},
-                {relations: ["exam", "candidate","precedence","precedence.exam","precedence.candidate", "questions", "questions.question", "questions.chosenAnswer", "questions.answers"]});
+            userExam = await getUserEx(req);
         }
         // await userExam.reload();
         status = true;
     }
-    req.session.userExam = userExam;
+    // req.session.setTimeout(10,(gfhgj)=>{
+    //    console.log('timeOut')
+    // });
     res.send({status: status, userExam: userExam});
+
 });
 
 
@@ -149,16 +149,14 @@ let getUserExam = async (examName, userName) => {
 
 let getUserEx = async (req) => {
     return await connection.manager.findOne(UserExams, {id: req.session.userExamID},
-        {relations: ["exam", "candidate", "precedence", "precedence.exam", "precedence.candidate", "questions", "questions.question", "questions.chosenAnswer", "questions.answers"]});
+        {relations: ["exam","exam.questions", "candidate","precedence","precedence.exam","precedence.candidate", "questions", "questions.question", "questions.chosenAnswer", "questions.answers"]});
 
 };
 let updateSolvingUserExam = async (req)=> {
 
 
     //user exam should come from sessions
-    let userExam = await connection.manager.findOne(UserExams, {id: req.session.userExamID},
-        {relations: ["exam", "candidate","precedence","precedence.exam","precedence.candidate", "questions", "questions.question", "questions.chosenAnswer", "questions.answers"]});
-
+    let userExam = await getUserEx(req);
     let questionDetail = req.body.questionDetail;
     let chosenAnsID = req.body.chosenAnswerID;
     await connection.getRepository(QuestionDetail).update({userExam: userExam, question: questionDetail.question},
@@ -167,8 +165,7 @@ let updateSolvingUserExam = async (req)=> {
 
 let updateUserExamResults = async (req) => {
 
-    let userExam = await connection.manager.findOne(UserExams, {id: req.session.userExamID},
-        {relations: ["exam", "candidate","precedence","precedence.exam","precedence.candidate", "questions", "questions.question", "questions.chosenAnswer", "questions.answers"]});
+    let userExam =await getUserEx(req);
     let score = 0 ;
     let numOfQuestions= userExam.questions.length;
     userExam.questions.forEach((questionDetail)=>{

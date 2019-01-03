@@ -1,3 +1,5 @@
+
+const User = require("../entity/User").User;
 const type_orm = require("typeorm");
 const HR = require("../entity/HR").HR;
 const Candidate = require("../entity/Candidate").Candidate;
@@ -52,8 +54,15 @@ findByUsernamePasswordCandidate = async function (username, password) {
     return null;
 };
 
+
 let getUserInfo = async function (req,res) {
-    const exists_user = await connection.getRepository(HR).findOne({where: {id: req.session.user.id}});
+    let exists_user;
+    if(req.session.user.hasOwnProperty('cv')){
+        exists_user = await connection.getRepository(Candidate).findOne({where: {username: req.session.user.username}});
+    }
+    else
+        exists_user = await connection.getRepository(HR).findOne({where: {username: req.session.user.username}});
+
     if (exists_user != null) {
         return exists_user;
     }

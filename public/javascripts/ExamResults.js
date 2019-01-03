@@ -1,18 +1,22 @@
 
 $(document).ready(()=> {
-    let userName = 'sa2a';
-    let examName = 'Java';
+    $('#homePage').click(()=>{
+        window.location.replace('/candidate.html');
+    });
 
-
+    $.ajax({
+        url: "/getUserInfo",
+        type: "POST",
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        success: (data) => {
+            $('#info').html('<p> Welcome, '+data.username+'</p>');
+        }
+    });
 
     $.ajax({
         url: 'examResultPage',
         type: "POST",
-
-        data: {
-            userName: userName,
-            examName: examName
-        },
 
         dataType: 'json',
         success: (userExam) => {
@@ -24,7 +28,7 @@ $(document).ready(()=> {
             $(`input[name=passed]`).val(passed);
             userExam.questions.forEach((questionDetails) => {
 
-                $('#listQuestionsAnswers').append(`<li>${questionDetails.question.name}</li>`);
+                $('#listQuestionsAnswers').append(`<li class="liQuestions">${questionDetails.question.name}</li>`);
                 $('#listQuestionsAnswers').append(`<div id="${questionDetails.question.id}" class="divAnswers"></div>`);
                 questionDetails.answers.forEach(answer => {
                     let color = 'black';
@@ -38,8 +42,8 @@ $(document).ready(()=> {
                     if(answer.correctness){
                         color = 'green';
                     }
-                    let html = `<input type="radio" name="${questionDetails.question.id}" id="${answer.id}" value="${answer.id}" disabled>`+
-                        `<label for="${answer.id}" style="color: ${color}" id="lblAns">${answer.name}</label><br>`;
+                    let html = `<input type="radio" class="radAnswers" name="${questionDetails.question.id}" id="${answer.id}" value="${answer.id}" disabled>`+
+                        `<label for="${answer.id}" class="radAnswers" style="color: ${color}" id="lblAns">${answer.name}</label><br>`;
                     $(`#${questionDetails.question.id}`).append(html);
                     $(`input[type=radio][id=${answer.id}]`).prop( "checked", check );
 

@@ -14,11 +14,13 @@ app.post('/exam/addAnswer',  (req, res) => {
 });
 
 app.get('/getAllExams', async (req, res) => {
-    examEvents.emit('getAllExams',res);
+    let exams = await examController.getAllExams();
+    res.send(exams);
 });
 
 app.post('/getExamDetails', async (req, res) => {
-    examEvents.emit('getExamDetails',res,req.body.examName);
+    let details =examController.getExamDetails(req.body.examName);
+    res.send(details);
 });
 
 

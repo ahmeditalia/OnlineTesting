@@ -29,7 +29,9 @@ app.post("/login", async (req, res) => {
             res.send({status:true, url:'/HR.html'});
         }
         else
+        {
             res.send({status:true, url:'/candidate.html'});
+        }
     }
     else
     {

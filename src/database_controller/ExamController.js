@@ -61,10 +61,24 @@ event.on('getExamDetails', async (res, examName) => {
 });
 
 
+let getExamDetails=  async (examName) => {
+    let exam = await connection.getRepository(Exam).findOne({name: examName}, {relations: ["questions", "questions.answers"]});
+    let data = [];
+    if (exam.hasOwnProperty('questions')) {
+        exam.questions.forEach(question => {
+            data.push({questionName: question.name, answers: question.answers});
+        });
+    }
+    return data;
+};
 
+
+let getExamByName = async (name) => {
+    return (await connection.getRepository(Exam).findOne({where:{name:name}}));
+};
 
 ////////////////////////////////////////////////////////////
 
 module.exports = {
-    event,getAllExams
+    event,getAllExams,getExamDetails,getExamByName
 };

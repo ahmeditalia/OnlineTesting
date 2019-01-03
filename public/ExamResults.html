@@ -5,11 +5,23 @@
     <title>Exam results</title>
     <script src="javascripts/jquery.js"></script>
     <script src="javascripts/ExamResults.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
 
 </head>
 <body>
+<div class="leftDiv" id="leftDiv">
+    <ul>
+        <li><button id="homePage">Home</button></li>
+        <li style="float: right;margin-right: 0px; width: 250px ">
+            <div class="userinfo" id="info">
+                Ahleyn, yasta
+            </div>
+        </li>
+    </ul>
+</div>
+
     <div id="divExamResults">
-        <h1 id="examName"></h1>
+        <h1 id="examName" style="color: #0E1119"></h1>
         <div id="examResults">Total Score: <input type="text" name="score" size="1" readonly>
             |  Passed: <input type="text" name="passed" size="1" readonly>
         </div>

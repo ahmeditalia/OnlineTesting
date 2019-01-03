@@ -286,11 +286,35 @@ ul {
     overflow: hidden;
     background-color: rgb(4, 6, 10);
 }
+ol {
+    /*list-style-type: none;*/
+    margin-right: 1px;
+    background-color: rgb(43, 56, 99);
+}
+.liQuestions{
+    float: left;
+    font-style: italic;
+    padding-top: 10px;
+    margin-right: 1px;
+    width:fit-content;
+    height: fit-content;
+    color: rgb(238, 254, 237);
+}
 li {
     float: left;
     height: 50px;
     width: 130px;
     margin-right: 1px;
+}
+
+.divAnswers{
+    padding-top: 30px;
+}
+.radAnswers{
+    width:fit-content;
+    height: fit-content;
+    margin-right: 2px;
+    color: #a0aac5;
 }
 .tbpositions{
     margin-top: 10px;
@@ -366,6 +390,7 @@ li {
 }
 .leftDiv{
     padding: 8px 8px 2px 2px;color: white;
+    height: 50px;
 }
 .leftDiv p{
     color: wheat;

@@ -69,32 +69,40 @@ $(document).ready(function () {
                     let row = "<tr>"
                         + "<td>" + data[i].position.name+ "</td>"
                         + "<td>" + data[i].position.description + "</td>"
-                        + "<td style='text-align: center;'>";
-                    let td ="";
+                        + "<td style='text-align: center;'></td></tr>";
+                    $('#body').append(row);
+                    let a;
                     if(data[i].accepted) {
                         $.post('/getUserExamsForPos', {position: data[i].position}, (userExams) => {
                             console.log(userExams);
                             for (var j = 0; j < userExams.length; j++) {
-                                td += "<button name='exam' id='" + userExams[j].id + "'>" + userExams[j].exam.name + "</button>";
+                                a = "<a name='exam' id='" + userExams[j].id  + "' href='#'>" + userExams[j].exam.name + "</a><br>";
+                                $('#body tr:last td:last').append(a);
+
                             }
+                            $('a[name=exam]').click(function () {
+                                $.post('/reqExamPageUrl',{userExamId:this.id},(data)=> {
+                                    if (!data.status)
+                                        window.location = data.url;
+                                    else
+                                        alert(data.status);
+                                });
+                            });
                         });
                     }
                     else if(!data[i].seen){
-                        td += "on hold";
+                        a = "on hold";
+                        $('#body tr:last td:last').append(a);
                     }
                     else if(data[i].seen && !data[i].accepted){
-                        td += "rejected";
+                        a = "rejected";
+                        $('#body tr:last td:last').append(a);
                     }
-                    row += td + "</td>"
-                        + "</tr>";
-                    $('#body').append(row);
                 }
-                $('button[name=exam]').click(function () {
-                    $.post('/examPage',{userExamId:this.id},(data)=>{
-                        window.location = data.url;
-                    });
-                });
+
             }
         });
     });
+
+
 });

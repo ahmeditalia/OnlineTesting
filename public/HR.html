@@ -3,20 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>HR Control</title>
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
     <script src="javascripts/jquery.js"></script>
     <script src="javascripts/HRview.js"></script>
+    <script src="javascripts/logout.js"></script>
 </head>
 <body>
-    <div>
-        <button id="ApplicantNotification">Applications</button>
-        <button id="test">Test</button>
-        <button id="newPosition">New Position</button>
+    <div class="leftDiv" style="list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: rgb(4, 6, 10);">
+        <li><button id="ApplicantNotification">Applications</button></li>
+        <li><button id="test">Test</button></li>
+        <li><button id="newPosition">New Position</button></li>
+        <li style="float: right;margin-right: 0px; width: 250px ">
+            <div class="userinfo" id="info">
+                Ahleyn, yasta
+            </div>
+        </li>
+        <li>
+            <button id="logout">logout</button>
+        </li>
     </div>
-    <div id="applicationDiv">
+    <div id="applicationDiv" class="tbpositions">
         <select id='postSelection' >
-            <option value='0'>All Application</option>
         </select>
-        <table id='applicantTable' style='width:100%'>
+        <table id='applicantTable' class="container" style='width:80%;margin-top:50px; '>
             <thead>
             <tr>
                 <th>Applicant</th>
@@ -29,7 +42,7 @@
         </table>
     </div>
 
-    <div id="showDiv">
+    <div id="showDiv" class="leftDiv" style="margin: 100px 0px 0px 250px;width: 500px;text-align: center">
 
     </div>
 </body>

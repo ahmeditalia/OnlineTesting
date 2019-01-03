@@ -3,11 +3,22 @@ $(document).ready(function () {
     let acceptance = false;
     let seen = false;
     let application;
+    $.ajax({
+        url: "/getUserInfo",
+        type: "POST",
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        success: (data) => {
+            $('#info').html('<p> Welcome, '+data.username+'</p>');
+        }
+    });
 
     function onlyUnique(value, index, self) {
         return self.indexOf(value) === index;
     }
     function initApplicationList() {
+        $("#postSelection").empty();
+        $("#postSelection").append("<option value='0'>All Application</option>");
         $.post("/getAllPositions",{id : 1},function (data) {
             let post;
             for(let i=0; i < data.length ; i++) {
@@ -128,7 +139,7 @@ $(document).ready(function () {
         $("#showDiv").show();
         $("#applicationDiv").hide();
         let exams =[];
-        let html = "<table id='examTable' border='1' style=\"width:100%\">\n" +
+        let html = "<table id='examTable' class=\"container\" border='1' style=\"width:100%\">\n" +
             "            <tr>\n" +
             "                <th>Exam</th>\n" +
             "                <th>Precedence</th>\n" +
@@ -248,7 +259,6 @@ $(document).ready(function () {
                     precedence = data[i].precedence.exam.name;
                 }else
                     precedence = "No Precedence";
-                alert(data[i].id);
                 let row = "<tr>\n" +
                     "<td><a href='#' role='button' id='"+data[i].id+"' name='exam'>"+data[i].exam.name+"</a></td>" +
                     "<td>"+precedence+"</td>" +
@@ -258,10 +268,20 @@ $(document).ready(function () {
                 $("#examTableBody").append(row);
             }
         });
+        $("#examTableBody").delegate("a[name='exam']","click",function(){
+            $.ajax({
+                url:'/examResultPageWithID',
+                type: 'POST',
+                data:{
+                    userExamID : this.id
+                },
+                success:(data)=>{
+                    window.location.replace(data.url);
+                }
+            });
+        });
     });
-    $("#examTable").delegate("a[name='exam']","click",function(){
 
-    });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
