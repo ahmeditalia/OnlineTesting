@@ -7,7 +7,7 @@ export class Exam {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({length: 50})
+    @Column({length: 50, unique:true})
     name: string;
 
     @OneToMany(type => Question, question => question.exam)

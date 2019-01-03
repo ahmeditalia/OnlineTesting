@@ -1,6 +1,11 @@
-const app = require("../app").app;
+
+const HR = require('../entity/HR').HR;
+const appFile = require("../app");
+let app = appFile.app;
+let path = appFile.path;
 const userFind = require("../database_controller/userFind");
 
+let fs= require('fs');
 
 app.post("/getUserById", async (req,res)=>{
 
@@ -18,11 +23,23 @@ app.post("/login", async (req, res) => {
     }
     if(result)
     {
-        req.session.user = user;
-        res.end('{"success" : "Exists"}');
+        req.session.user = result;
+        if(result instanceof HR)
+        {
+            res.send({status:true, url:'/HR.html'});
+        }
+        else
+        {
+            res.send({status:true, url:'/candidate.html'});
+        }
     }
     else
     {
-        res.end('{"success" : "Not Exists"}');
+        res.end({status:false});
     }
+});
+
+app.post("/getUserInfo" ,async (req,res)=>{
+    let user = await userFind.getUserInfo(req,res);
+    res.send(user);
 });

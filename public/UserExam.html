@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="javascripts/jquery.js"></script>
+    <script src="javascripts/UserExam.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
+
+    <title>Start exam</title>
+</head>
+<body>
+
+<div class="leftDiv" id="leftDiv">
+    <ul>
+        <li><button id="startExam">Start the Exam</button></li>
+        <li>Timer:<p id="seconds"></p>sec.</li>
+        <li style="float: right;margin-right: 0px; width: 250px ">
+            <div class="userinfo" id="info">
+                Ahleyn, yasta
+            </div>
+        </li>
+    </ul>
+</div>
+    <form action="ExamResults.html">
+
+        <h1 id="examName" style="color: #0E1119"></h1>
+        <div>Number of questions:  Marked: <input type="text" name="numOfMarkedQ" size="1" readonly>
+            |  Solved: <input type="text" name="numOfAnsweredQ" size="1" readonly>
+            |  Total: <input type="text" name="numOfQuestions" size="1" readonly>
+        </div>
+        <ol id="listQuestionsAnswers" >
+        </ol>
+        <div class="leftDiv">
+        <button type="submit" id="submit" value="Submit">Submit</button>
+        </div>
+    </form>
+</body>
+</html>

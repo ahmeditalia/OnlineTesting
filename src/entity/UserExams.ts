@@ -1,19 +1,26 @@
-import {Entity, Column, PrimaryColumn, ManyToOne, OneToOne, OneToMany, JoinColumn} from "typeorm";
+import {
+    Entity,
+    Column,
+    ManyToOne,
+    OneToOne,
+    OneToMany,
+    JoinColumn,
+    PrimaryGeneratedColumn
+} from "typeorm";
 import {Exam} from "./Exam";
 import {Candidate} from "./Candidate";
 import {QuestionDetail} from "./QuestionDetail";
+import {Position} from "./Position";
 
 @Entity()
 export class UserExams {
+    @PrimaryGeneratedColumn()
+    id: number;
 
-    @ManyToOne(type => Exam, {
-        primary: true
-    })
+    @ManyToOne(type => Exam)
     exam: Exam;
 
-    @ManyToOne(type => Candidate, candidate => candidate.userExams, {
-        primary: true
-    })
+    @ManyToOne(type => Candidate, candidate => candidate.userExams)
     candidate: Candidate;
 
     @OneToOne(type => UserExams)
@@ -28,4 +35,7 @@ export class UserExams {
 
     @OneToMany(type => QuestionDetail, questionDetail => questionDetail.userExam)
     questions: QuestionDetail[];
+
+    @ManyToOne(type => Position)
+    position: Position;
 }

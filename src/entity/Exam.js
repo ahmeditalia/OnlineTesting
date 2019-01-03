@@ -19,7 +19,7 @@ var Exam = /** @class */ (function () {
         __metadata("design:type", Number)
     ], Exam.prototype, "id", void 0);
     __decorate([
-        typeorm_1.Column({ length: 50 }),
+        typeorm_1.Column({ length: 50, unique: true }),
         __metadata("design:type", String)
     ], Exam.prototype, "name", void 0);
     __decorate([
