@@ -14,12 +14,17 @@ createConnection.then(()=> {
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(session({secret: "secret", saveUninitialized: true, resave: false}));
 
+    app.use(function(req, res, next) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        next();
+    });
     app.set('views',location);
     app.engine('html', require('ejs').renderFile);
     app.set('view engine', 'ejs');
 
-    app.listen(3000,()=>{
-        console.log("application has started on port 3000");
+    app.listen(5000,()=>{
+        console.log("application has started on port 5000");
     });
 
     module.exports ={
@@ -31,6 +36,8 @@ createConnection.then(()=> {
     const userExam= require('./request_controllers/UserExam');
     const login = require('./request_controllers/login');
     const register = require('./request_controllers/registration');
+    const react= require('./request_controllers/TestReact');
+
 
 }).catch(error =>
 {
